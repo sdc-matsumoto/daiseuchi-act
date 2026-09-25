@@ -17,10 +17,13 @@
   const params = new URLSearchParams(location.search);
   const DEBUG = params.has("debug");
 
-  const SOLID = new Set(["#", "I", "F", "C", "!", "S"]);
+  const SOLID = new Set(["#", "I", "F", "C", "!", "S", "="]);
   const ASSETS = {
     idle: "assets/daiseuchi-idle.png",
-    jump: "assets/daiseuchi-jump.png",
+    walkA: "assets/daiseuchi-walk-a.png",
+    walkB: "assets/daiseuchi-walk-b.png",
+    jumpR: "assets/daiseuchi-jump-right.png",
+    jumpL: "assets/daiseuchi-jump-left.png",
     hurt: "assets/daiseuchi-hurt.png",
     bear: "assets/enemy-bear.png",
     gull: "assets/enemy-gull.png",
@@ -595,15 +598,42 @@
       const [tx, ty] = key.split(",").map(Number);
       const ch = get(tx, ty);
       if (ch === "!") setTile(tx, ty, "^");
-      else if (ch === "F" || ch === "C") {
+      else if (ch === "F" || ch === "C" || ch === "=") {
+        shatter(tx, ty);
         setTile(tx, ty, ".");
-        debris.push({
-          x: tx * TILE, y: ty * TILE, w: TILE, h: TILE,
-          vy: 40, life: 2.4,
-        });
-        sfx("fall");
       }
       armed.delete(key);
+    }
+  }
+
+  function shatter(tx, ty) {
+    const x = tx * TILE;
+    const y = ty * TILE;
+    for (let i = 0; i < 3; i++) {
+      debris.push({
+        x: x + i * 10,
+        y: y + 4,
+        w: 12,
+        h: 10,
+        vx: (i - 1) * 90,
+        vy: -50 - i * 30,
+        life: 0.65,
+        harm: false,
+      });
+    }
+    sfx("fall");
+  }
+
+  function collapseRun(tx, ty) {
+    let l = tx;
+    let r = tx;
+    while (get(l - 1, ty) === "=") l -= 1;
+    while (get(r + 1, ty) === "=") r += 1;
+    for (let x = l; x <= r; x++) {
+      const key = `${x},${ty}`;
+      if (armed.has(key)) continue;
+      const delay = 0.32 + Math.abs(x - tx) * 0.04;
+      armed.set(key, { t: delay, max: delay });
     }
   }
 
@@ -615,9 +645,10 @@
     for (let tx = left; tx <= right; tx++) {
       const ch = get(tx, ty);
       if ((ch === "F" || ch === "C" || ch === "!") && !armed.has(`${tx},${ty}`)) {
-        const delay = ch === "C" ? 0.07 : ch === "!" ? 0.22 : 0.58;
+        const delay = ch === "C" ? 0.2 : ch === "!" ? 0.22 : 0.5;
         armed.set(`${tx},${ty}`, { t: delay, max: delay });
       }
+      if (ch === "=" && !armed.has(`${tx},${ty}`)) collapseRun(tx, ty);
       if (ch === "S") sprung = true;
     }
     return sprung;
@@ -685,7 +716,7 @@
     else player.coyote -= dt;
     if (player.grounded) player.boost = false;
 
-    if (Math.abs(player.vx) > 20 && player.grounded) player.runT += dt * Math.abs(player.vx) * 0.05;
+    if (Math.abs(player.vx) > 20 && player.grounded) player.runT += dt * 6;
     revealNear();
 
     if (player.y > H * TILE + 8) kill("底がない");
@@ -709,9 +740,10 @@
   function updateDebris(dt) {
     for (const d of debris) {
       d.vy = Math.min(d.vy + G * dt, 900);
+      d.x += (d.vx || 0) * dt;
       d.y += d.vy * dt;
       d.life -= dt;
-      if (mode === "play" && rects(player, d)) kill("氷に潰された");
+      if (d.harm !== false && mode === "play" && rects(player, d)) kill("氷に潰された");
     }
     debris = debris.filter((d) => d.life > 0 && d.y < H * TILE + 40);
   }
@@ -1049,16 +1081,25 @@
           continue;
         }
         if (ch === "=" || ch === "#" || ch === "F" || ch === "C" || ch === "!" || ch === "S" || (ch === "I" && (revealed.has(`${tx},${ty}`) || DEBUG))) {
-          let dy = 0;
           const arm = armed.get(`${tx},${ty}`);
-          if (arm) dy = Math.sin(performance.now() / 40) * (ch === "C" ? 2 : 1.4);
+          const breaking = arm && (ch === "=" || ch === "F" || ch === "C");
           if (ch === "I" && !revealed.has(`${tx},${ty}`)) {
             ctx.globalAlpha = 0.35;
             ctx.strokeStyle = "#39f";
             ctx.strokeRect(x + 4, y + 4, TILE - 8, TILE - 8);
             ctx.globalAlpha = 1;
           } else {
-            drawIce(x, y, TILE, TILE, dy);
+            if (breaking) {
+              const p = Math.max(0, Math.min(1, 1 - arm.t / arm.max));
+              const dy = Math.sin(performance.now() / 40) * (1 + p * 2);
+              drawIce(x, y, TILE, TILE, dy);
+              ctx.fillStyle = `rgba(255,255,255,${0.12 + p * 0.3})`;
+              ctx.fillRect(x, y + dy, TILE, TILE);
+              drawCracks(x, y + dy, TILE, TILE, p);
+            } else {
+              const dy = arm ? Math.sin(performance.now() / 40) * 1.4 : 0;
+              drawIce(x, y, TILE, TILE, dy);
+            }
             if (ch === "S") {
               ctx.strokeStyle = "#d4534a";
               ctx.lineWidth = 3;
@@ -1112,6 +1153,25 @@
     }
   }
 
+  function drawCracks(x, y, w, h, p) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(x + 1, y + 1, w - 2, h - 2);
+    ctx.clip();
+    ctx.strokeStyle = "#0c2436";
+    ctx.lineWidth = 3;
+    ctx.globalAlpha = 0.55 + p * 0.45;
+    ctx.beginPath();
+    ctx.moveTo(x + 5, y + 3);
+    ctx.lineTo(x + 13, y + h * 0.55);
+    ctx.lineTo(x + 8, y + h - 3);
+    ctx.moveTo(x + 13, y + h * 0.55);
+    ctx.lineTo(x + 24, y + h * 0.3);
+    ctx.lineTo(x + w - 3, y + h - 4);
+    ctx.stroke();
+    ctx.restore();
+  }
+
   function drawSprite(img, x, y, w, h, flip) {
     if (!img) return;
     ctx.save();
@@ -1130,12 +1190,10 @@
     if (!img) return;
     let dw = b.w + 10;
     let dh = b.h + 8;
-    if (kind === "idle" || kind === "jump" || kind === "hurt") {
-      dh = 64;
+    if (kind === "idle" || kind === "walkA" || kind === "walkB" || kind === "jumpR" || kind === "jumpL" || kind === "hurt") {
+      dh = 58;
       dw = dh * (img.width / img.height);
-      const bob = kind === "idle" && player && Math.abs(player.vx) > 30 && player.grounded
-        ? Math.sin(player.runT) * 2 : 0;
-      drawSprite(img, b.x + b.w / 2 - dw / 2, b.y + b.h - dh + bob, dw, dh, flip);
+      drawSprite(img, b.x + b.w / 2 - dw / 2, b.y + b.h - dh, dw, dh, flip);
       return;
     }
     if (kind === "gull") { dw = 46; dh = 40; }
@@ -1145,8 +1203,15 @@
     drawSprite(img, b.x + b.w / 2 - dw / 2, b.y + b.h - dh, dw, dh, flip);
   }
 
+  function playerKind(body) {
+    if (!body.grounded) return body.face < 0 ? "jumpL" : "jumpR";
+    if (Math.abs(body.vx) > 20) return Math.floor(body.runT) % 2 === 0 ? "walkA" : "walkB";
+    return "idle";
+  }
+
   function drawPlayerBody(body, kind, face) {
-    drawActor(kind, body, face < 0);
+    const flip = kind === "walkA" || kind === "walkB" || kind === "idle" || kind === "hurt";
+    drawActor(kind, body, flip && face < 0);
   }
 
   function drawHud() {
@@ -1246,8 +1311,7 @@
     if (mode === "dead" && deathPose) {
       drawPlayerBody(deathPose, "hurt", deathPose.face);
     } else if (player) {
-      const kind = !player.grounded ? "jump" : "idle";
-      drawPlayerBody(player, kind, player.face);
+      drawPlayerBody(player, playerKind(player), player.face);
       if (DEBUG) {
         ctx.strokeStyle = "#0a0";
         ctx.strokeRect(player.x, player.y, player.w, player.h);
