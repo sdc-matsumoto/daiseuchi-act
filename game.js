@@ -13,7 +13,7 @@
   const PW = 22;
   const PH = 31;
   const SPRING_V = -860;
-  const SAVE_KEY = "daiseuchi-act-v1";
+  const SAVE_KEY = "daiseuchi-act-v2";
   const params = new URLSearchParams(location.search);
   const DEBUG = params.has("debug");
 
@@ -81,7 +81,7 @@
   function makePlayer(x, y) {
     return {
       x, y, vx: 0, vy: 0, w: PW, h: PH,
-      grounded: false, coyote: 0, buffer: 0, face: 1,
+      grounded: false, coyote: 0, buffer: 0, face: 1, air: 1,
       riding: null, runT: 0, alive: true, springLock: 0, boost: false,
     };
   }
@@ -113,10 +113,10 @@
       {
         name: "1面　歓迎の氷",
         lie: "まっすぐ行くだけや",
-        rows: makeMap(86, 18, (m) => {
+        rows: makeMap(170, 18, (m) => {
           m.rect(0, 0, 1, 18, "#");
-          m.rect(85, 0, 1, 18, "#");
-          m.rect(0, 15, 86, 3, "#");
+          m.rect(169, 0, 1, 18, "#");
+          m.rect(0, 15, 170, 3, "#");
           m.set(4, 14, "A");
           pit(m, 14, 2, 15, 18);
           pit(m, 22, 2, 15, 18);
@@ -136,16 +136,31 @@
           m.set(70, 14, "R");
           pit(m, 74, 2, 15, 18);
           m.set(78, 14, "B");
-          for (let y = 10; y <= 14; y++) m.set(82, y, "G");
+          m.rect(90, 11, 24, 1, "v");
+          m.set(96, 12, "t");
+          m.set(104, 12, "t");
+          m.set(112, 12, "t");
+          m.set(122, 13, "R");
+          m.set(122, 14, "R");
+          pit(m, 128, 5, 15, 18);
+          m.rect(128, 10, 5, 1, "v");
+          m.set(130, 12, "t");
+          m.rect(140, 15, 3, 1, "!");
+          m.rect(140, 16, 3, 2, ".");
+          m.rect(140, 17, 3, 1, "^");
+          m.set(150, 14, "B");
+          m.set(158, 13, "R");
+          m.set(158, 14, "R");
+          for (let y = 10; y <= 14; y++) m.set(164, y, "G");
         }),
       },
       {
         name: "2面　急がなくてええ氷",
         lie: "急がんでええ。足場は待ってくれる",
-        rows: makeMap(98, 20, (m) => {
+        rows: makeMap(176, 20, (m) => {
           m.rect(0, 0, 1, 20, "#");
-          m.rect(97, 0, 1, 20, "#");
-          m.rect(0, 16, 98, 4, "#");
+          m.rect(175, 0, 1, 20, "#");
+          m.rect(0, 16, 176, 4, "#");
           m.set(4, 15, "A");
           m.set(12, 14, "R");
           m.set(12, 15, "R");
@@ -168,20 +183,29 @@
           m.set(73, 12, "Y");
           m.rect(72, 11, 3, 4, "^");
           m.set(76, 16, "S");
-          m.rect(78, 16, 19, 4, ".");
-          m.rect(78, 18, 19, 2, "^");
-          m.rect(78, 12, 12, 1, "#");
-          for (let y = 8; y <= 11; y++) m.set(86, y, "G");
-          m.rect(88, 12, 9, 4, "#");
+          m.rect(78, 16, 90, 4, ".");
+          m.rect(78, 18, 90, 2, "^");
+          m.rect(78, 12, 82, 1, "#");
+          m.rect(96, 8, 66, 1, "v");
+          m.set(104, 9, "t");
+          m.set(114, 9, "t");
+          m.set(124, 9, "t");
+          m.rect(130, 12, 4, 1, ".");
+          m.set(131, 9, "t");
+          m.set(142, 10, "R");
+          m.set(142, 11, "R");
+          m.set(150, 10, "t");
+          m.rect(156, 12, 2, 1, "!");
+          for (let y = 8; y <= 11; y++) m.set(166, y, "G");
         }),
       },
       {
         name: "3面　空と海",
         lie: "鳥は飾り、海は泳げる",
-        rows: makeMap(104, 18, (m) => {
+        rows: makeMap(168, 18, (m) => {
           m.rect(0, 0, 1, 18, "#");
-          m.rect(103, 0, 1, 18, "#");
-          m.rect(0, 14, 104, 4, "#");
+          m.rect(167, 0, 1, 18, "#");
+          m.rect(0, 14, 168, 4, "#");
           m.set(4, 13, "A");
           pit(m, 12, 2, 14, 18);
           m.set(13, 10, "U");
@@ -207,16 +231,29 @@
           m.rect(90, 14, 2, 1, "!");
           m.rect(90, 15, 2, 3, ".");
           m.rect(90, 16, 2, 2, "^");
-          for (let y = 9; y <= 13; y++) m.set(98, y, "G");
+          m.set(100, 12, "R");
+          m.set(100, 13, "R");
+          m.rect(106, 10, 40, 1, "v");
+          m.set(112, 11, "t");
+          m.set(120, 11, "t");
+          m.set(128, 11, "t");
+          pit(m, 136, 4, 14, 18);
+          m.set(136, 11, "U");
+          m.rect(146, 14, 4, 4, ".");
+          m.rect(146, 14, 4, 1, "=");
+          m.rect(146, 16, 4, 2, "^");
+          m.set(154, 12, "X");
+          m.set(158, 13, "B");
+          for (let y = 9; y <= 13; y++) m.set(164, y, "G");
         }),
       },
       {
         name: "4面　わしの本懐",
         lie: "見えてる旗がゴールや",
-        rows: makeMap(118, 22, (m) => {
+        rows: makeMap(188, 22, (m) => {
           m.rect(0, 0, 1, 22, "#");
-          m.rect(117, 0, 1, 22, "#");
-          m.rect(0, 16, 118, 6, "#");
+          m.rect(187, 0, 1, 22, "#");
+          m.rect(0, 16, 188, 6, "#");
           m.set(4, 15, "A");
           pit(m, 12, 2, 16, 22);
           m.set(18, 14, "R");
@@ -238,9 +275,15 @@
           m.set(74, 15, "R");
           m.set(80, 13, "Z");
           m.rect(83, 16, 2, 3, ".");
-          m.rect(83, 17, 22, 2, ".");
-          m.rect(104, 17, 13, 2, "#");
-          for (let y = 17; y <= 18; y++) m.set(98, y, "G");
+          m.rect(83, 17, 96, 2, ".");
+          m.rect(100, 16, 70, 1, "v");
+          m.set(108, 15, "t");
+          m.set(118, 15, "t");
+          m.set(128, 15, "t");
+          m.set(148, 17, "R");
+          m.set(148, 18, "R");
+          m.set(158, 15, "t");
+          for (let y = 17; y <= 18; y++) m.set(172, y, "G");
           m.rect(88, 14, 6, 2, "#");
           m.rect(96, 12, 6, 4, "#");
           m.rect(104, 10, 8, 6, "#");
@@ -426,6 +469,11 @@
     for (let y = 0; y < H; y++) {
       for (let x = 0; x < W; x++) {
         const ch = scan[y][x];
+        if (ch === "t") {
+          scan[y][x] = ".";
+          entities.push(makeDrop(x, y));
+          continue;
+        }
         if ("ABNUP".includes(ch) === false && ch !== "O") continue;
         scan[y][x] = ".";
         if (ch === "A") { ax = x; ay = y; }
@@ -465,6 +513,40 @@
       x: tx * TILE + (TILE - PW) / 2,
       y: feetRowFromMarker(ty) * TILE - PH,
     };
+  }
+
+  function makeDrop(tx, ty) {
+    return {
+      kind: "drop",
+      x: tx * TILE + 8,
+      y: ty * TILE + 2,
+      w: 16,
+      h: 26,
+      vy: 0,
+      state: "wait",
+    };
+  }
+
+  function updateDrop(e, dt) {
+    if (e.state === "wait") {
+      const pcx = player.x + PW / 2;
+      const ecx = e.x + e.w / 2;
+      if (Math.abs(pcx - ecx) < 20 && player.y > e.y) {
+        e.state = "fall";
+        e.vy = 260;
+      }
+      return;
+    }
+    if (e.state === "rest") return;
+    e.vy = Math.min(e.vy + G * dt, 980);
+    e.y += e.vy * dt;
+    const tx = Math.floor((e.x + e.w / 2) / TILE);
+    const under = Math.floor((e.y + e.h) / TILE);
+    if (e.vy > 0 && solidAt(tx, under)) {
+      e.y = under * TILE - e.h;
+      e.vy = 0;
+      e.state = "rest";
+    }
   }
 
   function makeWalker(kind, tx, ty, w, h, speed) {
@@ -537,6 +619,11 @@
         e.state = "idle";
         e.cd = 0.4;
         e.timer = 0;
+      } else if (e.kind === "drop") {
+        e.x = e.homeX;
+        e.y = e.homeY;
+        e.vy = 0;
+        e.state = "wait";
       } else if (e.kind === "mover") {
         e.x = e.homeX;
         e.prevX = e.homeX;
@@ -670,13 +757,18 @@
     if (consumeJump()) player.buffer = 0.12;
     else player.buffer = Math.max(0, player.buffer - dt);
 
-    if (player.buffer > 0 && (player.grounded || player.coyote > 0) && player.springLock <= 0) {
-      player.vy = JUMP_V;
-      player.grounded = false;
-      player.coyote = 0;
-      player.buffer = 0;
-      sfx("jump");
-      burst(player.x + PW / 2, player.y + PH, "#d7f6ff", 5);
+    if (player.buffer > 0 && player.springLock <= 0) {
+      const fromGround = player.grounded || player.coyote > 0;
+      if (fromGround || player.air > 0) {
+        player.vy = JUMP_V;
+        player.grounded = false;
+        player.coyote = 0;
+        player.buffer = 0;
+        player.air = fromGround ? 1 : player.air - 1;
+        player.boost = false;
+        sfx("jump");
+        burst(player.x + PW / 2, player.y + PH, "#d7f6ff", 5);
+      }
     }
 
     const grav = (!jumpHeld() && player.vy < 0 && !player.boost) ? G * 2.7 : G;
@@ -707,12 +799,16 @@
         player.coyote = 0;
         player.springLock = 0.12;
         player.boost = true;
+        player.air = 1;
         sfx("spring");
       }
     }
 
     stickPlatforms();
-    if (player.grounded) player.coyote = 0.07;
+    if (player.grounded) {
+      player.coyote = 0.07;
+      player.air = 1;
+    }
     else player.coyote -= dt;
     if (player.grounded) player.boost = false;
 
@@ -813,16 +909,19 @@
   }
 
   function hazardTiles(b) {
-    const x0 = Math.floor(b.x / TILE);
-    const y0 = Math.floor(b.y / TILE);
-    const x1 = Math.floor((b.x + b.w - 0.01) / TILE);
-    const y1 = Math.floor((b.y + b.h - 0.01) / TILE);
+    const spikeBody = { x: b.x - 6, y: b.y - 10, w: b.w + 12, h: b.h + 12 };
+    const x0 = Math.floor(spikeBody.x / TILE);
+    const y0 = Math.floor(spikeBody.y / TILE);
+    const x1 = Math.floor((spikeBody.x + spikeBody.w - 0.01) / TILE);
+    const y1 = Math.floor((Math.max(b.y + b.h, spikeBody.y + spikeBody.h) - 0.01) / TILE);
     const found = [];
     for (let ty = y0; ty <= y1; ty++) {
       for (let tx = x0; tx <= x1; tx++) {
         const ch = get(tx, ty);
-        if ("^v<>~".includes(ch) || ch === "X" || ch === "g" || ch === "R" || ch === "G") {
-          if (spikeOverlap(b, tx, ty, ch) || "XgRG~".includes(ch)) found.push({ tx, ty, ch });
+        if ("^v<>".includes(ch)) {
+          if (spikeOverlap(spikeBody, tx, ty, ch)) found.push({ tx, ty, ch });
+        } else if ("XgRG~".includes(ch) && rects(b, { x: tx * TILE, y: ty * TILE, w: TILE, h: TILE })) {
+          found.push({ tx, ty, ch });
         }
       }
     }
@@ -831,9 +930,13 @@
 
   function spikeOverlap(b, tx, ty, ch) {
     if (!"^v<>".includes(ch)) return false;
-    const padX = ch === "<" || ch === ">" ? 8 : 5;
-    const padY = ch === "^" || ch === "v" ? 6 : 5;
-    const r = { x: tx * TILE + padX, y: ty * TILE + padY, w: TILE - padX * 2, h: TILE - padY * 2 };
+    const x = tx * TILE;
+    const y = ty * TILE;
+    let r;
+    if (ch === "^") r = { x: x + 3, y: y + 4, w: TILE - 6, h: TILE - 4 };
+    else if (ch === "v") r = { x: x + 3, y: y, w: TILE - 6, h: TILE - 4 };
+    else if (ch === "<") r = { x: x + 4, y: y + 3, w: TILE - 4, h: TILE - 6 };
+    else r = { x: x, y: y + 3, w: TILE - 4, h: TILE - 6 };
     return rects(b, r);
   }
 
@@ -892,8 +995,9 @@
       if (e.kind === "bear" || e.kind === "penguin") updateWalker(e, dt);
       else if (e.kind === "gull") updateGull(e, dt);
       else if (e.kind === "orca") updateOrca(e, dt);
+      else if (e.kind === "drop") updateDrop(e, dt);
       if (e.kind !== "mover" && player.alive && rects(player, e)) {
-        const name = { bear: "熊に会うた", penguin: "ペンギンや", gull: "鳥に突かれた", orca: "シャチや" }[e.kind];
+        const name = { bear: "熊に会うた", penguin: "ペンギンや", gull: "鳥に突かれた", orca: "シャチや", drop: "氷が落ちてきた" }[e.kind];
         kill(name || "当てられた");
       }
     }
@@ -995,6 +1099,21 @@
     ctx.strokeStyle = "#1c4664";
     ctx.lineWidth = 2;
     ctx.strokeRect(x + 1, y + 1 + shake, w - 2, h - 2);
+  }
+
+  function drawIcicle(e) {
+    const x = e.x;
+    const y = e.y;
+    ctx.fillStyle = "#f4fbff";
+    ctx.strokeStyle = "#1b3348";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + e.w, y);
+    ctx.lineTo(x + e.w / 2, y + e.h);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
   }
 
   function drawSpike(tx, ty, ch) {
@@ -1226,11 +1345,11 @@
     ctx.fillText(stage ? stage.name : "", VW - 20, 36);
     ctx.textAlign = "left";
     ctx.fillStyle = "rgba(7,16,24,0.45)";
-    roundRect(16, 64, 390, 24, 8);
+    roundRect(16, 64, 430, 24, 8);
     ctx.fill();
     ctx.fillStyle = "#f4fbff";
     ctx.font = "12px Yu Gothic UI, Meiryo, sans-serif";
-    ctx.fillText("←→ 移動　　Z長押しでジャンプ　　R やりなおし", 28, 81);
+    ctx.fillText("←→ 移動　　Z は地面と空中でもう一度　　R やりなおし", 28, 81);
     for (const f of floaters) {
       ctx.globalAlpha = Math.max(0, Math.min(1, f.life * 2));
       ctx.fillStyle = f.color;
@@ -1303,6 +1422,7 @@
       if (e.kind === "penguin") drawActor("penguin", e, e.dir > 0);
       if (e.kind === "gull") drawActor("gull", e, e.dir > 0);
       if (e.kind === "orca") drawActor("orca", e, e.flip);
+      if (e.kind === "drop") drawIcicle(e);
       if (DEBUG) {
         ctx.strokeStyle = "#f33";
         ctx.strokeRect(e.x, e.y, e.w, e.h);
@@ -1371,7 +1491,7 @@
     }
     ctx.font = "14px Yu Gothic UI, Meiryo, sans-serif";
     ctx.fillStyle = "#204866";
-    ctx.fillText("ジャンプは押しっぱなしで高く遠くまで。旗はページを閉じると消える。", VW / 2, 520);
+    ctx.fillText("Zは地面と空中で二回。押しっぱなしで高く。旗はページを閉じると消える。", VW / 2, 520);
     ctx.textAlign = "left";
   }
 
