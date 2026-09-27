@@ -13,7 +13,7 @@
   const PW = 22;
   const PH = 31;
   const SPRING_V = -860;
-  const SAVE_KEY = "daiseuchi-act-v2";
+  const SAVE_KEY = "daiseuchi-act-v3";
   const params = new URLSearchParams(location.search);
   const DEBUG = params.has("debug");
 
@@ -67,6 +67,7 @@
   let W = 0;
   let H = 0;
   let entities = [];
+  let traps = [];
   let spawn = { x: 64, y: 64 };
   let revealed = new Set();
   let armed = new Map();
@@ -113,46 +114,66 @@
       {
         name: "1面　歓迎の氷",
         lie: "まっすぐ行くだけや",
-        rows: makeMap(170, 18, (m) => {
+        rows: makeMap(176, 18, (m) => {
           m.rect(0, 0, 1, 18, "#");
-          m.rect(169, 0, 1, 18, "#");
-          m.rect(0, 15, 170, 3, "#");
+          m.rect(175, 0, 1, 18, "#");
+          m.rect(0, 15, 176, 3, "#");
           m.set(4, 14, "A");
-          pit(m, 14, 2, 15, 18);
-          pit(m, 22, 2, 15, 18);
-          m.set(20, 13, "R");
-          m.set(20, 14, "R");
-          m.rect(30, 15, 8, 3, ".");
-          m.rect(30, 15, 8, 1, "=");
-          m.rect(30, 17, 8, 1, "^");
-          m.rect(27, 12, 16, 1, "#");
-          m.set(27, 9, "Y");
-          m.set(46, 13, "R");
-          m.set(46, 14, "R");
-          m.rect(52, 13, 14, 1, "v");
-          pit(m, 58, 3, 15, 18);
-          m.rect(58, 15, 3, 1, "I");
-          m.set(70, 13, "R");
-          m.set(70, 14, "R");
-          pit(m, 74, 2, 15, 18);
-          m.set(78, 14, "B");
-          m.rect(90, 11, 24, 1, "v");
-          m.set(96, 12, "t");
-          m.set(104, 12, "t");
-          m.set(112, 12, "t");
-          m.set(122, 13, "R");
-          m.set(122, 14, "R");
-          pit(m, 128, 5, 15, 18);
-          m.rect(128, 10, 5, 1, "v");
-          m.set(130, 12, "t");
-          m.rect(140, 15, 3, 1, "!");
-          m.rect(140, 16, 3, 2, ".");
-          m.rect(140, 17, 3, 1, "^");
-          m.set(150, 14, "B");
-          m.set(158, 13, "R");
-          m.set(158, 14, "R");
-          for (let y = 10; y <= 14; y++) m.set(164, y, "G");
+          pit(m, 12, 2, 15, 18);
+          m.set(18, 13, "R");
+          m.set(18, 14, "R");
+          m.set(50, 11, "Y");
+          m.rect(54, 15, 10, 3, ".");
+          m.rect(54, 15, 10, 1, "=");
+          m.rect(54, 17, 10, 1, "^");
+          m.rect(56, 12, 18, 1, "#");
+          m.set(74, 13, "R");
+          m.set(74, 14, "R");
+          m.set(118, 13, "R");
+          m.set(118, 14, "R");
+          m.set(126, 12, "u");
+          m.set(146, 14, "B");
+          pit(m, 152, 3, 15, 18);
+          m.set(160, 13, "R");
+          m.set(160, 14, "R");
+          for (let y = 10; y <= 14; y++) m.set(168, y, "G");
         }),
+        traps: [
+          { type: "cross", at: 32, drops: [
+            { tx: 32, row: 9, delay: 0 },
+            { tx: 33, row: 9, delay: 0 },
+            { tx: 34, row: 9, delay: 0.04 },
+            { tx: 35, row: 9, delay: 0.04 },
+            { tx: 36, row: 9, delay: 0.08 },
+          ]},
+          { type: "back", at: 32, back: 24, follow: true, spread: 2, row: 9, drops: [
+            { tx: 18, row: 9, delay: 0 },
+            { tx: 19, row: 9, delay: 0 },
+            { tx: 20, row: 9, delay: 0.03 },
+          ]},
+          { type: "back", at: 58, back: 46, drops: [
+            { tx: 44, row: 4, delay: 0 },
+            { tx: 46, row: 4, delay: 0.08 },
+          ]},
+          { type: "cross", at: 100, drops: [
+            { tx: 100, row: 9, delay: 0 },
+            { tx: 101, row: 9, delay: 0 },
+            { tx: 102, row: 9, delay: 0.04 },
+            { tx: 103, row: 9, delay: 0.04 },
+            { tx: 98, row: 9, delay: 0.55 },
+            { tx: 97, row: 9, delay: 0.58 },
+          ]},
+          { type: "back", at: 100, back: 90, follow: true, spread: 2, row: 9, drops: [
+            { tx: 84, row: 9, delay: 0 },
+            { tx: 86, row: 9, delay: 0.04 },
+          ]},
+          { type: "jump", x0: 122 * TILE, x1: 140 * TILE, follow: true, row: 9, spread: 1 },
+          { type: "back", at: 128, back: 120, drops: [
+            { tx: 116, row: 4, delay: 0 },
+            { tx: 118, row: 4, delay: 0.06 },
+            { tx: 120, row: 4, delay: 0.1 },
+          ]},
+        ],
       },
       {
         name: "2面　急がなくてええ氷",
@@ -162,90 +183,120 @@
           m.rect(175, 0, 1, 20, "#");
           m.rect(0, 16, 176, 4, "#");
           m.set(4, 15, "A");
-          m.set(12, 14, "R");
-          m.set(12, 15, "R");
-          pit(m, 18, 2, 16, 20);
-          m.rect(26, 16, 3, 4, ".");
-          m.rect(26, 16, 3, 1, "F");
-          m.rect(26, 18, 3, 2, "^");
-          m.set(34, 16, "C");
-          m.rect(34, 17, 1, 3, ".");
-          m.rect(34, 18, 1, 2, "^");
-          m.set(36, 12, "a");
-          m.set(42, 14, "R");
-          m.set(42, 15, "R");
-          pit(m, 46, 1, 16, 20);
-          pit(m, 63, 2, 16, 20);
-          m.set(52, 15, "N");
-          m.set(66, 14, "R");
-          m.set(66, 15, "R");
-          m.set(70, 15, "X");
-          m.set(73, 12, "Y");
-          m.rect(72, 11, 3, 4, "^");
-          m.set(76, 16, "S");
-          m.rect(78, 16, 90, 4, ".");
-          m.rect(78, 18, 90, 2, "^");
-          m.rect(78, 12, 82, 1, "#");
-          m.rect(96, 8, 66, 1, "v");
-          m.set(104, 9, "t");
-          m.set(114, 9, "t");
-          m.set(124, 9, "t");
-          m.rect(130, 12, 4, 1, ".");
-          m.set(131, 9, "t");
-          m.set(142, 10, "R");
-          m.set(142, 11, "R");
-          m.set(150, 10, "t");
-          m.rect(156, 12, 2, 1, "!");
-          for (let y = 8; y <= 11; y++) m.set(166, y, "G");
+          pit(m, 24, 2, 16, 20);
+          m.set(32, 14, "R");
+          m.set(32, 15, "R");
+          m.rect(46, 13, 3, 1, "#");
+          m.rect(52, 13, 3, 1, "#");
+          m.rect(58, 13, 3, 1, "#");
+          m.rect(64, 13, 3, 1, "#");
+          m.rect(70, 13, 3, 1, "#");
+          m.rect(76, 13, 3, 1, "#");
+          pit(m, 44, 36, 16, 20);
+          m.set(50, 16, "S");
+          m.set(92, 14, "R");
+          m.set(92, 15, "R");
+          m.set(102, 15, "N");
+          m.set(112, 14, "R");
+          m.set(112, 15, "R");
+          m.set(154, 14, "R");
+          m.set(154, 15, "R");
+          pit(m, 160, 3, 16, 20);
+          for (let y = 11; y <= 15; y++) m.set(168, y, "G");
         }),
+        traps: [
+          { type: "still", x0: 8 * TILE, x1: 20 * TILE, hold: 0.7, follow: true, row: 10, spread: 2 },
+          { type: "spring", x0: 49 * TILE, x1: 52 * TILE, drops: [
+            { tx: 50, row: 10, delay: 0.05 },
+            { tx: 51, row: 10, delay: 0.05 },
+            { tx: 52, row: 10, delay: 0.08 },
+          ]},
+          { type: "back", at: 50, back: 34, feetMin: 16, follow: true, spread: 2, row: 10, drops: [
+            { tx: 32, row: 10, delay: 0 },
+            { tx: 33, row: 10, delay: 0 },
+          ]},
+          { type: "cross", at: 126, drops: [
+            { tx: 126, row: 10, delay: 0 },
+            { tx: 127, row: 10, delay: 0 },
+            { tx: 128, row: 10, delay: 0.04 },
+            { tx: 129, row: 10, delay: 0.04 },
+            { tx: 124, row: 10, delay: 0.55 },
+            { tx: 123, row: 10, delay: 0.58 },
+          ]},
+          { type: "back", at: 126, back: 116, follow: true, spread: 2, row: 10, drops: [
+            { tx: 112, row: 10, delay: 0 },
+            { tx: 113, row: 10, delay: 0 },
+          ]},
+        ],
       },
       {
         name: "3面　空と海",
         lie: "鳥は飾り、海は泳げる",
-        rows: makeMap(168, 18, (m) => {
+        rows: makeMap(176, 18, (m) => {
           m.rect(0, 0, 1, 18, "#");
-          m.rect(167, 0, 1, 18, "#");
-          m.rect(0, 14, 168, 4, "#");
+          m.rect(175, 0, 1, 18, "#");
+          m.rect(0, 14, 176, 4, "#");
           m.set(4, 13, "A");
           pit(m, 12, 2, 14, 18);
           m.set(13, 10, "U");
           pit(m, 20, 2, 14, 18);
           m.set(21, 10, "U");
-          m.set(26, 12, "R");
-          m.set(26, 13, "R");
-          m.rect(32, 14, 6, 4, ".");
-          m.rect(32, 15, 2, 3, "~");
-          m.rect(36, 15, 2, 3, "~");
-          m.rect(34, 14, 2, 1, "#");
-          m.set(34, 16, "O");
-          m.set(30, 10, "Z");
-          m.set(42, 13, "X");
-          m.set(52, 12, "R");
-          m.set(52, 13, "R");
-          pit(m, 58, 2, 14, 18);
-          m.set(64, 13, "B");
-          pit(m, 74, 2, 14, 18);
-          m.set(78, 10, "U");
+          m.set(28, 12, "R");
+          m.set(28, 13, "R");
+          m.rect(36, 14, 11, 4, ".");
+          m.rect(36, 15, 4, 3, "~");
+          m.rect(44, 15, 3, 3, "~");
+          m.rect(40, 14, 4, 1, "#");
+          m.set(41, 16, "O");
+          m.set(34, 10, "Y");
+          m.set(54, 12, "R");
+          m.set(54, 13, "R");
           m.set(84, 12, "R");
           m.set(84, 13, "R");
-          m.rect(90, 14, 2, 1, "!");
-          m.rect(90, 15, 2, 3, ".");
-          m.rect(90, 16, 2, 2, "^");
-          m.set(100, 12, "R");
-          m.set(100, 13, "R");
-          m.rect(106, 10, 40, 1, "v");
-          m.set(112, 11, "t");
-          m.set(120, 11, "t");
-          m.set(128, 11, "t");
-          pit(m, 136, 4, 14, 18);
-          m.set(136, 11, "U");
-          m.rect(146, 14, 4, 4, ".");
-          m.rect(146, 14, 4, 1, "=");
-          m.rect(146, 16, 4, 2, "^");
-          m.set(154, 12, "X");
-          m.set(158, 13, "B");
-          for (let y = 9; y <= 13; y++) m.set(164, y, "G");
+          m.set(96, 12, "R");
+          m.set(96, 13, "R");
+          m.set(100, 10, "Z");
+          m.rect(104, 14, 6, 3, ".");
+          m.rect(104, 15, 22, 2, ".");
+          m.rect(104, 17, 22, 1, "#");
+          for (let y = 15; y <= 16; y++) m.set(118, y, "G");
+          m.rect(98, 11, 48, 1, "#");
+          for (let y = 7; y <= 10; y++) m.set(132, y, "g");
+          m.set(128, 8, "U");
+          m.set(140, 13, "X");
         }),
+        traps: [
+          { type: "back", at: 46, back: 32, follow: true, spread: 2, row: 8, drops: [
+            { tx: 28, row: 8, delay: 0 },
+            { tx: 29, row: 8, delay: 0 },
+            { tx: 30, row: 8, delay: 0.03 },
+          ]},
+          { type: "cross", at: 70, drops: [
+            { tx: 70, row: 8, delay: 0 },
+            { tx: 71, row: 8, delay: 0 },
+            { tx: 72, row: 8, delay: 0.04 },
+            { tx: 73, row: 8, delay: 0.04 },
+            { tx: 68, row: 8, delay: 0.55 },
+            { tx: 67, row: 8, delay: 0.58 },
+          ]},
+          { type: "back", at: 70, back: 60, follow: true, spread: 2, row: 8, drops: [
+            { tx: 54, row: 8, delay: 0 },
+            { tx: 55, row: 8, delay: 0 },
+          ]},
+          { type: "seal", at: 92, tiles: [86, 87, 88, 89, 90].map((tx) => ({ tx, ty: 14, ch: "^" })) },
+          { type: "cross", at: 124, feetMin: 11, feetMax: 12, drops: [
+            { tx: 124, row: 4, delay: 0 },
+            { tx: 126, row: 4, delay: 0.08 },
+            { tx: 128, row: 4, delay: 0.14 },
+            { tx: 130, row: 4, delay: 0.2 },
+          ]},
+          { type: "back", at: 124, back: 112, feetMin: 11, feetMax: 12, drops: [
+            { tx: 106, row: 3, delay: 0 },
+            { tx: 108, row: 3, delay: 0.06 },
+            { tx: 110, row: 3, delay: 0.1 },
+            { tx: 112, row: 3, delay: 0.14 },
+          ]},
+        ],
       },
       {
         name: "4面　わしの本懐",
@@ -255,52 +306,64 @@
           m.rect(187, 0, 1, 22, "#");
           m.rect(0, 16, 188, 6, "#");
           m.set(4, 15, "A");
-          pit(m, 12, 2, 16, 22);
-          m.set(18, 14, "R");
-          m.set(18, 15, "R");
-          m.set(22, 12, "Y");
-          m.rect(24, 16, 4, 6, ".");
-          m.rect(24, 16, 4, 1, "I");
-          m.rect(24, 19, 4, 3, "^");
-          m.set(31, 11, "Y");
-          m.rect(34, 16, 5, 6, ".");
-          m.rect(34, 19, 5, 3, "^");
-          m.rect(28, 13, 16, 1, "#");
-          m.set(48, 14, "R");
-          m.set(48, 15, "R");
-          pit(m, 54, 16, 16, 22);
-          m.rect(58, 13, 7, 1, "v");
-          m.set(56, 12, "a");
-          m.set(74, 14, "R");
-          m.set(74, 15, "R");
-          m.set(80, 13, "Z");
-          m.rect(83, 16, 2, 3, ".");
-          m.rect(83, 17, 96, 2, ".");
-          m.rect(100, 16, 70, 1, "v");
-          m.set(108, 15, "t");
-          m.set(118, 15, "t");
-          m.set(128, 15, "t");
-          m.set(148, 17, "R");
-          m.set(148, 18, "R");
-          m.set(158, 15, "t");
-          for (let y = 17; y <= 18; y++) m.set(172, y, "G");
-          m.rect(88, 14, 6, 2, "#");
-          m.rect(96, 12, 6, 4, "#");
-          m.rect(104, 10, 8, 6, "#");
-          for (let y = 6; y <= 9; y++) m.set(108, y, "g");
-          m.set(108, 5, "U");
+          pit(m, 14, 2, 16, 22);
+          m.set(22, 14, "R");
+          m.set(22, 15, "R");
+          pit(m, 34, 18, 16, 22);
+          m.set(60, 14, "R");
+          m.set(60, 15, "R");
+          m.rect(64, 13, 24, 1, "#");
+          m.set(66, 11, "Y");
+          m.rect(74, 16, 100, 4, ".");
+          m.rect(74, 20, 100, 2, "#");
+          m.set(88, 18, "R");
+          m.set(88, 19, "R");
+          for (let y = 9; y <= 12; y++) m.set(82, y, "g");
+          m.set(78, 8, "U");
+          for (let y = 18; y <= 19; y++) m.set(156, y, "G");
         }),
         movers: [
           {
-            x: 51 * TILE,
+            x: 34 * TILE,
             y: 16 * TILE,
             w: 3 * TILE,
             h: 12,
-            minX: 51 * TILE,
-            maxX: 65 * TILE,
-            speed: 70,
+            minX: 34 * TILE,
+            maxX: 50 * TILE,
+            speed: 150,
             dir: 1,
           },
+        ],
+        traps: [
+          { type: "still", x0: 26 * TILE, x1: 33 * TILE, hold: 0.95, follow: true, row: 10, spread: 2 },
+          { type: "jump", x0: 34 * TILE, x1: 52 * TILE, follow: true, row: 10, spread: 2 },
+          { type: "back", at: 40, back: 24, drops: [
+            { tx: 20, row: 5, delay: 0 },
+            { tx: 22, row: 5, delay: 0.06 },
+            { tx: 24, row: 5, delay: 0.12 },
+          ]},
+          { type: "cross", at: 78, feetMin: 13, feetMax: 14, drops: [
+            { tx: 78, row: 8, delay: 0 },
+            { tx: 80, row: 8, delay: 0.04 },
+            { tx: 82, row: 8, delay: 0.08 },
+            { tx: 84, row: 8, delay: 0.1 },
+          ]},
+          { type: "back", at: 78, back: 68, feetMin: 13, feetMax: 14, follow: true, spread: 2, row: 8, drops: [
+            { tx: 64, row: 8, delay: 0 },
+            { tx: 65, row: 8, delay: 0 },
+          ]},
+          { type: "cross", at: 116, feetMin: 18, drops: [
+            { tx: 116, row: 14, delay: 0 },
+            { tx: 117, row: 14, delay: 0 },
+            { tx: 118, row: 14, delay: 0.04 },
+            { tx: 119, row: 14, delay: 0.04 },
+            { tx: 114, row: 14, delay: 0.55 },
+            { tx: 113, row: 14, delay: 0.58 },
+          ]},
+          { type: "back", at: 116, back: 104, feetMin: 18, follow: true, spread: 2, row: 14, drops: [
+            { tx: 96, row: 14, delay: 0 },
+            { tx: 98, row: 14, delay: 0.04 },
+          ]},
         ],
       },
     ];
@@ -504,6 +567,8 @@
     timer = 1.25;
     reason = "";
     rememberHomes();
+    traps = compileTraps(stage.traps);
+    primeTraps();
     snapCamera(true);
     persist();
   }
@@ -524,7 +589,24 @@
       h: 26,
       vy: 0,
       state: "wait",
+      hot: true,
     };
+  }
+
+  function spawnNeedle(tx, row, delay) {
+    entities.push({
+      kind: "drop",
+      spawned: true,
+      hot: false,
+      x: tx * TILE + 8,
+      y: row * TILE + 2,
+      w: 16,
+      h: 26,
+      vy: 0,
+        state: "delay",
+        delay,
+        vy0: 480,
+      });
   }
 
   function updateDrop(e, dt) {
@@ -534,18 +616,125 @@
       if (Math.abs(pcx - ecx) < 20 && player.y > e.y) {
         e.state = "fall";
         e.vy = 260;
+        e.hot = true;
       }
       return;
     }
-    if (e.state === "rest") return;
-    e.vy = Math.min(e.vy + G * dt, 980);
-    e.y += e.vy * dt;
+    if (e.state === "delay") {
+      e.delay -= dt;
+      if (e.delay <= 0) {
+        e.state = "fall";
+        e.vy = e.vy0 || 480;
+        e.hot = true;
+      }
+      return;
+    }
+    if (e.state !== "fall") return;
+    e.vy = Math.min(e.vy + G * dt, 1100);
+    const next = e.y + e.vy * dt;
     const tx = Math.floor((e.x + e.w / 2) / TILE);
-    const under = Math.floor((e.y + e.h) / TILE);
+    const under = Math.floor((next + e.h) / TILE);
     if (e.vy > 0 && solidAt(tx, under)) {
-      e.y = under * TILE - e.h;
-      e.vy = 0;
-      e.state = "rest";
+      burst(e.x + e.w / 2, under * TILE, "#e7f6ff", 6);
+      e.state = "gone";
+      e.hot = false;
+      return;
+    }
+    e.y = next;
+  }
+
+  function compileTraps(list) {
+    return (list || []).map((t) => ({
+      type: t.type,
+      at: t.at ?? 0,
+      back: t.back ?? 0,
+      x0: t.x0 ?? 0,
+      x1: t.x1 ?? 0,
+      hold: t.hold ?? 0.75,
+      held: 0,
+      row: t.row ?? 4,
+      spread: t.spread ?? 0,
+      follow: !!t.follow,
+      feetMin: t.feetMin ?? null,
+      feetMax: t.feetMax ?? null,
+      drops: (t.drops || []).map((d) => ({ tx: d.tx, row: d.row, delay: d.delay || 0 })),
+      tiles: (t.tiles || []).map((s) => ({ tx: s.tx, ty: s.ty, ch: s.ch })),
+      armed: false,
+      done: false,
+    }));
+  }
+
+  function feetTile() {
+    return Math.floor((player.y + player.h) / TILE);
+  }
+
+  function feetOk(t) {
+    const feet = feetTile();
+    if (t.feetMin != null && feet < t.feetMin) return false;
+    if (t.feetMax != null && feet > t.feetMax) return false;
+    return true;
+  }
+
+  function releaseTrap(t) {
+    if (t.done) return;
+    t.done = true;
+    if (t.follow) {
+      const tx = Math.floor((player.x + PW / 2) / TILE);
+      const sp = t.spread || 0;
+      for (let i = -sp; i <= sp; i++) spawnNeedle(tx + i, t.row, Math.abs(i) * 0.03);
+    }
+    for (const d of t.drops) spawnNeedle(d.tx, d.row, d.delay);
+    sfx("warn");
+    cam.shake = Math.max(cam.shake, 6);
+  }
+
+  function primeTraps() {
+    const tx = Math.floor((player.x + PW / 2) / TILE);
+    for (const t of traps) {
+      t.done = false;
+      t.armed = false;
+      t.held = 0;
+      if (!feetOk(t)) continue;
+      if ((t.type === "cross" || t.type === "seal") && tx >= t.at) {
+        t.done = true;
+        if (t.type === "seal") {
+          for (const s of t.tiles) setTile(s.tx, s.ty, s.ch);
+        }
+      }
+      if (t.type === "back" && tx >= t.at) t.armed = true;
+      if ((t.type === "jump" || t.type === "still" || t.type === "spring") && player.x > t.x1) t.done = true;
+    }
+  }
+
+  function updateTraps(dt) {
+    if (!player.alive || mode !== "play") return;
+    const tx = Math.floor((player.x + PW / 2) / TILE);
+    const pcx = player.x + PW / 2;
+    for (const t of traps) {
+      if (t.done) continue;
+      if (t.type === "cross") {
+        if (tx >= t.at && feetOk(t)) releaseTrap(t);
+      } else if (t.type === "back") {
+        if (!t.armed && tx >= t.at && feetOk(t)) t.armed = true;
+        if (t.armed && tx <= t.back && feetOk(t)) releaseTrap(t);
+      } else if (t.type === "jump") {
+        if (player.justJumped && pcx >= t.x0 && pcx <= t.x1 && feetOk(t)) releaseTrap(t);
+      } else if (t.type === "spring") {
+        if (player.justSprung && pcx >= t.x0 && pcx <= t.x1 && feetOk(t)) releaseTrap(t);
+      } else if (t.type === "still") {
+        const inside = pcx >= t.x0 && pcx <= t.x1 && feetOk(t);
+        if (inside && player.grounded && Math.abs(player.vx) < 28) {
+          t.held += dt;
+          if (t.held >= t.hold) releaseTrap(t);
+        } else if (!inside) t.held = 0;
+      } else if (t.type === "seal") {
+        if (tx >= t.at && feetOk(t)) {
+          for (const s of t.tiles) setTile(s.tx, s.ty, s.ch);
+          t.done = true;
+          sfx("warn");
+          cam.shake = Math.max(cam.shake, 8);
+        }
+      }
     }
   }
 
@@ -601,6 +790,7 @@
     grid = baseGrid.map((r) => r.slice());
     armed.clear();
     debris = [];
+    entities = entities.filter((e) => !e.spawned);
     for (const e of entities) {
       if (e.kind === "bear" || e.kind === "penguin") {
         e.x = e.homeX;
@@ -624,6 +814,7 @@
         e.y = e.homeY;
         e.vy = 0;
         e.state = "wait";
+        e.hot = true;
       } else if (e.kind === "mover") {
         e.x = e.homeX;
         e.prevX = e.homeX;
@@ -633,6 +824,8 @@
     }
     player = makePlayer(spawn.x, spawn.y);
     mode = "play";
+    traps = compileTraps(stage.traps);
+    primeTraps();
   }
 
   function rememberHomes() {
@@ -742,6 +935,8 @@
   }
 
   function updatePlayer(dt) {
+    player.justJumped = false;
+    player.justSprung = false;
     const dir = horiz();
     const accel = player.grounded ? ACCEL : AIR;
     if (dir !== 0) {
@@ -766,6 +961,7 @@
         player.buffer = 0;
         player.air = fromGround ? 1 : player.air - 1;
         player.boost = false;
+        player.justJumped = true;
         sfx("jump");
         burst(player.x + PW / 2, player.y + PH, "#d7f6ff", 5);
       }
@@ -799,6 +995,7 @@
         player.coyote = 0;
         player.springLock = 0.12;
         player.boost = true;
+        player.justSprung = true;
         player.air = 1;
         sfx("spring");
       }
@@ -996,11 +1193,12 @@
       else if (e.kind === "gull") updateGull(e, dt);
       else if (e.kind === "orca") updateOrca(e, dt);
       else if (e.kind === "drop") updateDrop(e, dt);
-      if (e.kind !== "mover" && player.alive && rects(player, e)) {
+      if (e.kind !== "mover" && e.hot !== false && e.state !== "delay" && e.state !== "gone" && player.alive && rects(player, e)) {
         const name = { bear: "熊に会うた", penguin: "ペンギンや", gull: "鳥に突かれた", orca: "シャチや", drop: "氷が落ちてきた" }[e.kind];
         kill(name || "当てられた");
       }
     }
+    entities = entities.filter((e) => e.state !== "gone");
   }
 
   function updateParticles(dt) {
@@ -1073,6 +1271,7 @@
     updateArmed(dt);
     for (const e of entities) if (e.kind === "mover") updateMover(e, dt);
     updatePlayer(dt);
+    updateTraps(dt);
     updateDebris(dt);
     updateEntities(dt);
     if (mode === "play") handleHazards();
@@ -1422,7 +1621,7 @@
       if (e.kind === "penguin") drawActor("penguin", e, e.dir > 0);
       if (e.kind === "gull") drawActor("gull", e, e.dir > 0);
       if (e.kind === "orca") drawActor("orca", e, e.flip);
-      if (e.kind === "drop") drawIcicle(e);
+      if (e.kind === "drop" && e.state !== "delay" && e.state !== "gone") drawIcicle(e);
       if (DEBUG) {
         ctx.strokeStyle = "#f33";
         ctx.strokeRect(e.x, e.y, e.w, e.h);
@@ -1710,6 +1909,7 @@
         tileX: player && Math.floor((player.x + PW / 2) / TILE),
         tileY: player && Math.floor((player.y + PH) / TILE),
         cp: cpId,
+        traps: traps.map((t) => ({ k: t.type, at: t.at, done: t.done ? 1 : 0, arm: t.armed ? 1 : 0, held: Math.round(t.held * 100) })),
         ents: entities.map((e) => ({
           k: e.kind,
           x: Math.round(e.x),
