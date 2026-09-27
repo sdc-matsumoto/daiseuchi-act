@@ -13,11 +13,11 @@
   const PW = 22;
   const PH = 31;
   const SPRING_V = -860;
-  const SAVE_KEY = "daiseuchi-act-v3";
+  const SAVE_KEY = "daiseuchi-act-v4";
   const params = new URLSearchParams(location.search);
   const DEBUG = params.has("debug");
 
-  const SOLID = new Set(["#", "I", "F", "C", "!", "S", "="]);
+  const SOLID = new Set(["#", "I", "F", "C", "!", "S", "Q", "="]);
   const ASSETS = {
     idle: "assets/daiseuchi-idle.png",
     walkA: "assets/daiseuchi-walk-a.png",
@@ -110,261 +110,188 @@
   }
 
   function buildLevels() {
+    const T = 32;
     return [
       {
-        name: "1面　歓迎の氷",
-        lie: "まっすぐ行くだけや",
-        rows: makeMap(176, 18, (m) => {
+        name: "1面　おもてなし",
+        lie: "食べて、乗って、跳んだらええ",
+        rows: makeMap(112, 18, (m) => {
           m.rect(0, 0, 1, 18, "#");
-          m.rect(175, 0, 1, 18, "#");
-          m.rect(0, 15, 176, 3, "#");
+          m.rect(111, 0, 1, 18, "#");
+          m.rect(0, 15, 112, 3, "#");
           m.set(4, 14, "A");
-          pit(m, 12, 2, 15, 18);
-          m.set(18, 13, "R");
-          m.set(18, 14, "R");
-          m.set(50, 11, "Y");
-          m.rect(54, 15, 10, 3, ".");
-          m.rect(54, 15, 10, 1, "=");
-          m.rect(54, 17, 10, 1, "^");
-          m.rect(56, 12, 18, 1, "#");
-          m.set(74, 13, "R");
-          m.set(74, 14, "R");
-          m.set(118, 13, "R");
-          m.set(118, 14, "R");
-          m.set(126, 12, "u");
-          m.set(146, 14, "B");
-          pit(m, 152, 3, 15, 18);
-          m.set(160, 13, "R");
-          m.set(160, 14, "R");
-          for (let y = 10; y <= 14; y++) m.set(168, y, "G");
-        }),
-        traps: [
-          { type: "cross", at: 32, drops: [
-            { tx: 32, row: 9, delay: 0 },
-            { tx: 33, row: 9, delay: 0 },
-            { tx: 34, row: 9, delay: 0.04 },
-            { tx: 35, row: 9, delay: 0.04 },
-            { tx: 36, row: 9, delay: 0.08 },
-          ]},
-          { type: "back", at: 32, back: 24, follow: true, spread: 2, row: 9, drops: [
-            { tx: 18, row: 9, delay: 0 },
-            { tx: 19, row: 9, delay: 0 },
-            { tx: 20, row: 9, delay: 0.03 },
-          ]},
-          { type: "back", at: 58, back: 46, drops: [
-            { tx: 44, row: 4, delay: 0 },
-            { tx: 46, row: 4, delay: 0.08 },
-          ]},
-          { type: "cross", at: 100, drops: [
-            { tx: 100, row: 9, delay: 0 },
-            { tx: 101, row: 9, delay: 0 },
-            { tx: 102, row: 9, delay: 0.04 },
-            { tx: 103, row: 9, delay: 0.04 },
-            { tx: 98, row: 9, delay: 0.55 },
-            { tx: 97, row: 9, delay: 0.58 },
-          ]},
-          { type: "back", at: 100, back: 90, follow: true, spread: 2, row: 9, drops: [
-            { tx: 84, row: 9, delay: 0 },
-            { tx: 86, row: 9, delay: 0.04 },
-          ]},
-          { type: "jump", x0: 122 * TILE, x1: 140 * TILE, follow: true, row: 9, spread: 1 },
-          { type: "back", at: 128, back: 120, drops: [
-            { tx: 116, row: 4, delay: 0 },
-            { tx: 118, row: 4, delay: 0.06 },
-            { tx: 120, row: 4, delay: 0.1 },
-          ]},
-        ],
-      },
-      {
-        name: "2面　急がなくてええ氷",
-        lie: "急がんでええ。足場は待ってくれる",
-        rows: makeMap(176, 20, (m) => {
-          m.rect(0, 0, 1, 20, "#");
-          m.rect(175, 0, 1, 20, "#");
-          m.rect(0, 16, 176, 4, "#");
-          m.set(4, 15, "A");
-          pit(m, 24, 2, 16, 20);
-          m.set(32, 14, "R");
-          m.set(32, 15, "R");
-          m.rect(46, 13, 3, 1, "#");
-          m.rect(52, 13, 3, 1, "#");
-          m.rect(58, 13, 3, 1, "#");
-          m.rect(64, 13, 3, 1, "#");
-          m.rect(70, 13, 3, 1, "#");
-          m.rect(76, 13, 3, 1, "#");
-          pit(m, 44, 36, 16, 20);
-          m.set(50, 16, "S");
-          m.set(92, 14, "R");
-          m.set(92, 15, "R");
-          m.set(102, 15, "N");
-          m.set(112, 14, "R");
-          m.set(112, 15, "R");
-          m.set(154, 14, "R");
-          m.set(154, 15, "R");
-          pit(m, 160, 3, 16, 20);
-          for (let y = 11; y <= 15; y++) m.set(168, y, "G");
-        }),
-        traps: [
-          { type: "still", x0: 8 * TILE, x1: 20 * TILE, hold: 0.7, follow: true, row: 10, spread: 2 },
-          { type: "spring", x0: 49 * TILE, x1: 52 * TILE, drops: [
-            { tx: 50, row: 10, delay: 0.05 },
-            { tx: 51, row: 10, delay: 0.05 },
-            { tx: 52, row: 10, delay: 0.08 },
-          ]},
-          { type: "back", at: 50, back: 34, feetMin: 16, follow: true, spread: 2, row: 10, drops: [
-            { tx: 32, row: 10, delay: 0 },
-            { tx: 33, row: 10, delay: 0 },
-          ]},
-          { type: "cross", at: 126, drops: [
-            { tx: 126, row: 10, delay: 0 },
-            { tx: 127, row: 10, delay: 0 },
-            { tx: 128, row: 10, delay: 0.04 },
-            { tx: 129, row: 10, delay: 0.04 },
-            { tx: 124, row: 10, delay: 0.55 },
-            { tx: 123, row: 10, delay: 0.58 },
-          ]},
-          { type: "back", at: 126, back: 116, follow: true, spread: 2, row: 10, drops: [
-            { tx: 112, row: 10, delay: 0 },
-            { tx: 113, row: 10, delay: 0 },
-          ]},
-        ],
-      },
-      {
-        name: "3面　空と海",
-        lie: "鳥は飾り、海は泳げる",
-        rows: makeMap(176, 18, (m) => {
-          m.rect(0, 0, 1, 18, "#");
-          m.rect(175, 0, 1, 18, "#");
-          m.rect(0, 14, 176, 4, "#");
-          m.set(4, 13, "A");
-          pit(m, 12, 2, 14, 18);
-          m.set(13, 10, "U");
-          pit(m, 20, 2, 14, 18);
-          m.set(21, 10, "U");
-          m.set(28, 12, "R");
-          m.set(28, 13, "R");
-          m.rect(36, 14, 11, 4, ".");
-          m.rect(36, 15, 4, 3, "~");
-          m.rect(44, 15, 3, 3, "~");
-          m.rect(40, 14, 4, 1, "#");
-          m.set(41, 16, "O");
-          m.set(34, 10, "Y");
-          m.set(54, 12, "R");
-          m.set(54, 13, "R");
-          m.set(84, 12, "R");
-          m.set(84, 13, "R");
-          m.set(96, 12, "R");
+          m.set(8, 14, "p");
+          m.set(10, 14, "h");
+          pit(m, 14, 2, 15, 18);
+          m.set(20, 13, "R");
+          m.set(20, 14, "R");
+          m.set(24, 12, "c");
+          m.set(28, 14, "f");
+          m.rect(27, 16, 4, 2, "^");
+          m.set(36, 13, "R");
+          m.set(36, 14, "R");
+          m.set(42, 12, "b");
+          pit(m, 48, 12, 15, 18);
+          m.set(64, 13, "R");
+          m.set(64, 14, "R");
+          m.set(70, 12, "d");
+          pit(m, 76, 3, 15, 18);
+          m.set(76, 15, "Q");
+          m.set(86, 13, "R");
+          m.set(86, 14, "R");
           m.set(96, 13, "R");
-          m.set(100, 10, "Z");
-          m.rect(104, 14, 6, 3, ".");
-          m.rect(104, 15, 22, 2, ".");
-          m.rect(104, 17, 22, 1, "#");
-          for (let y = 15; y <= 16; y++) m.set(118, y, "G");
-          m.rect(98, 11, 48, 1, "#");
-          for (let y = 7; y <= 10; y++) m.set(132, y, "g");
-          m.set(128, 8, "U");
-          m.set(140, 13, "X");
+          m.set(96, 14, "R");
+          m.set(100, 14, "p");
+          m.set(102, 14, "h");
+          for (let y = 10; y <= 14; y++) m.set(106, y, "G");
         }),
-        traps: [
-          { type: "back", at: 46, back: 32, follow: true, spread: 2, row: 8, drops: [
-            { tx: 28, row: 8, delay: 0 },
-            { tx: 29, row: 8, delay: 0 },
-            { tx: 30, row: 8, delay: 0.03 },
-          ]},
-          { type: "cross", at: 70, drops: [
-            { tx: 70, row: 8, delay: 0 },
-            { tx: 71, row: 8, delay: 0 },
-            { tx: 72, row: 8, delay: 0.04 },
-            { tx: 73, row: 8, delay: 0.04 },
-            { tx: 68, row: 8, delay: 0.55 },
-            { tx: 67, row: 8, delay: 0.58 },
-          ]},
-          { type: "back", at: 70, back: 60, follow: true, spread: 2, row: 8, drops: [
-            { tx: 54, row: 8, delay: 0 },
-            { tx: 55, row: 8, delay: 0 },
-          ]},
-          { type: "seal", at: 92, tiles: [86, 87, 88, 89, 90].map((tx) => ({ tx, ty: 14, ch: "^" })) },
-          { type: "cross", at: 124, feetMin: 11, feetMax: 12, drops: [
-            { tx: 124, row: 4, delay: 0 },
-            { tx: 126, row: 4, delay: 0.08 },
-            { tx: 128, row: 4, delay: 0.14 },
-            { tx: 130, row: 4, delay: 0.2 },
-          ]},
-          { type: "back", at: 124, back: 112, feetMin: 11, feetMax: 12, drops: [
-            { tx: 106, row: 3, delay: 0 },
-            { tx: 108, row: 3, delay: 0.06 },
-            { tx: 110, row: 3, delay: 0.1 },
-            { tx: 112, row: 3, delay: 0.14 },
-          ]},
-        ],
+        movers: [{
+          x: 45 * T, y: 15 * T, w: 3 * T, h: 12,
+          minX: 45 * T, maxX: 58 * T, speed: 68, dir: 1,
+        }],
       },
       {
-        name: "4面　わしの本懐",
-        lie: "見えてる旗がゴールや",
-        rows: makeMap(188, 22, (m) => {
-          m.rect(0, 0, 1, 22, "#");
-          m.rect(187, 0, 1, 22, "#");
-          m.rect(0, 16, 188, 6, "#");
+        name: "2面　優しそうな床",
+        lie: "下の床が近道や",
+        rows: makeMap(128, 20, (m) => {
+          m.rect(0, 0, 1, 20, "#");
+          m.rect(127, 0, 1, 20, "#");
+          m.rect(0, 16, 128, 4, "#");
           m.set(4, 15, "A");
-          pit(m, 14, 2, 16, 22);
-          m.set(22, 14, "R");
-          m.set(22, 15, "R");
-          pit(m, 34, 18, 16, 22);
-          m.set(60, 14, "R");
-          m.set(60, 15, "R");
-          m.rect(64, 13, 24, 1, "#");
-          m.set(66, 11, "Y");
-          m.rect(74, 16, 100, 4, ".");
-          m.rect(74, 20, 100, 2, "#");
-          m.set(88, 18, "R");
-          m.set(88, 19, "R");
-          for (let y = 9; y <= 12; y++) m.set(82, y, "g");
-          m.set(78, 8, "U");
-          for (let y = 18; y <= 19; y++) m.set(156, y, "G");
+          m.set(8, 15, "p");
+          m.set(11, 15, "h");
+          m.set(16, 14, "R");
+          m.set(16, 15, "R");
+          m.set(22, 13, "b");
+          m.rect(24, 15, 2, 1, "#");
+          m.rect(26, 14, 2, 1, "#");
+          m.rect(28, 13, 24, 1, "#");
+          pit(m, 32, 10, 16, 20);
+          m.set(56, 14, "R");
+          m.set(56, 15, "R");
+          m.set(58, 13, "b");
+          m.rect(58, 15, 2, 1, "#");
+          m.rect(60, 14, 2, 1, "#");
+          m.rect(62, 13, 8, 1, "#");
+          m.rect(72, 13, 4, 1, "#");
+          m.rect(78, 13, 4, 1, "#");
+          m.rect(84, 13, 10, 1, "#");
+          pit(m, 66, 22, 16, 20);
+          m.rect(66, 17, 22, 3, "~");
+          m.rect(66, 14, 3, 1, "v");
+          m.set(96, 14, "R");
+          m.set(96, 15, "R");
+          m.set(100, 15, "p");
+          m.set(104, 8, "U");
+          m.set(110, 14, "R");
+          m.set(110, 15, "R");
+          m.set(114, 15, "h");
+          for (let y = 11; y <= 15; y++) m.set(120, y, "G");
+        }),
+        shies: [{ x: 34 * T, y: 16 * T, w: 3 * T, h: 12 }],
+        carts: [{ x: 80 * T, y: 16 * T, w: 3 * T, h: 12, minX: 66 * T, speed: 240 }],
+      },
+      {
+        name: "3面　海のごちそう",
+        lie: "海は泳げるし、旗は本物や",
+        rows: makeMap(124, 18, (m) => {
+          m.rect(0, 0, 1, 18, "#");
+          m.rect(123, 0, 1, 18, "#");
+          m.rect(0, 14, 124, 4, "#");
+          m.set(4, 13, "A");
+          m.set(8, 13, "p");
+          m.set(10, 13, "h");
+          m.set(16, 12, "R");
+          m.set(16, 13, "R");
+          m.rect(22, 14, 21, 4, ".");
+          m.rect(22, 15, 21, 3, "~");
+          m.rect(36, 14, 4, 1, "#");
+          m.set(37, 12, "R");
+          m.set(37, 13, "R");
+          m.set(48, 12, "R");
+          m.set(48, 13, "R");
+          m.set(52, 11, "c");
+          m.set(56, 13, "f");
+          m.rect(55, 15, 4, 3, "^");
+          m.set(66, 12, "R");
+          m.set(66, 13, "R");
+          m.set(70, 11, "Y");
+          m.rect(76, 14, 3, 4, ".");
+          m.rect(76, 17, 3, 1, "~");
+          for (let y = 14; y <= 16; y++) m.set(77, y, "g");
+          m.set(86, 13, "p");
+          m.set(90, 7, "U");
+          m.set(98, 12, "R");
+          m.set(98, 13, "R");
+          m.set(102, 13, "h");
+          for (let y = 9; y <= 13; y++) m.set(112, y, "G");
         }),
         movers: [
           {
-            x: 34 * TILE,
-            y: 16 * TILE,
-            w: 3 * TILE,
-            h: 12,
-            minX: 34 * TILE,
-            maxX: 50 * TILE,
-            speed: 150,
-            dir: 1,
+            x: 19 * T, y: 14 * T, w: 3 * T, h: 12,
+            minX: 19 * T, maxX: 34 * T, speed: 76, dir: 1,
+          },
+          {
+            x: 40 * T, y: 14 * T, w: T, h: 12,
+            minX: 39 * T, maxX: 42 * T, speed: 250, dir: 1, slip: true,
           },
         ],
-        traps: [
-          { type: "still", x0: 26 * TILE, x1: 33 * TILE, hold: 0.95, follow: true, row: 10, spread: 2 },
-          { type: "jump", x0: 34 * TILE, x1: 52 * TILE, follow: true, row: 10, spread: 2 },
-          { type: "back", at: 40, back: 24, drops: [
-            { tx: 20, row: 5, delay: 0 },
-            { tx: 22, row: 5, delay: 0.06 },
-            { tx: 24, row: 5, delay: 0.12 },
-          ]},
-          { type: "cross", at: 78, feetMin: 13, feetMax: 14, drops: [
-            { tx: 78, row: 8, delay: 0 },
-            { tx: 80, row: 8, delay: 0.04 },
-            { tx: 82, row: 8, delay: 0.08 },
-            { tx: 84, row: 8, delay: 0.1 },
-          ]},
-          { type: "back", at: 78, back: 68, feetMin: 13, feetMax: 14, follow: true, spread: 2, row: 8, drops: [
-            { tx: 64, row: 8, delay: 0 },
-            { tx: 65, row: 8, delay: 0 },
-          ]},
-          { type: "cross", at: 116, feetMin: 18, drops: [
-            { tx: 116, row: 14, delay: 0 },
-            { tx: 117, row: 14, delay: 0 },
-            { tx: 118, row: 14, delay: 0.04 },
-            { tx: 119, row: 14, delay: 0.04 },
-            { tx: 114, row: 14, delay: 0.55 },
-            { tx: 113, row: 14, delay: 0.58 },
-          ]},
-          { type: "back", at: 116, back: 104, feetMin: 18, follow: true, spread: 2, row: 14, drops: [
-            { tx: 96, row: 14, delay: 0 },
-            { tx: 98, row: 14, delay: 0.04 },
-          ]},
-        ],
+      },
+      {
+        name: "4面　おみやげ",
+        lie: "ぜんぶ親切に置いてある",
+        rows: makeMap(156, 20, (m) => {
+          m.rect(0, 0, 1, 20, "#");
+          m.rect(155, 0, 1, 20, "#");
+          m.rect(0, 16, 156, 4, "#");
+          m.set(4, 15, "A");
+          m.set(8, 15, "p");
+          m.set(11, 15, "h");
+          m.set(16, 14, "R");
+          m.set(16, 15, "R");
+          m.set(22, 13, "c");
+          m.set(28, 15, "f");
+          m.rect(27, 17, 4, 3, "^");
+          m.set(38, 14, "R");
+          m.set(38, 15, "R");
+          m.set(44, 13, "d");
+          pit(m, 50, 3, 16, 20);
+          m.set(50, 16, "Q");
+          m.set(60, 14, "R");
+          m.set(60, 15, "R");
+          m.set(70, 14, "R");
+          m.set(70, 15, "R");
+          m.set(76, 13, "b");
+          m.rect(78, 15, 2, 1, "#");
+          m.rect(80, 14, 2, 1, "#");
+          m.rect(82, 13, 16, 1, "#");
+          pit(m, 86, 8, 16, 20);
+          m.set(102, 14, "R");
+          m.set(102, 15, "R");
+          m.set(108, 13, "b");
+          m.rect(112, 16, 3, 4, ".");
+          m.rect(112, 17, 3, 3, "~");
+          m.set(120, 14, "R");
+          m.set(120, 15, "R");
+          m.set(122, 13, "b");
+          m.rect(122, 15, 2, 1, "#");
+          m.rect(124, 14, 2, 1, "#");
+          m.rect(126, 13, 22, 1, "#");
+          pit(m, 134, 12, 16, 20);
+          m.rect(134, 17, 12, 3, "~");
+          m.rect(134, 14, 3, 1, "v");
+          m.set(148, 14, "R");
+          m.set(148, 15, "R");
+          m.set(150, 15, "p");
+          m.set(152, 15, "h");
+          for (let y = 11; y <= 15; y++) m.set(154, y, "G");
+        }),
+        shies: [{ x: 88 * T, y: 16 * T, w: 3 * T, h: 12 }],
+        movers: [{
+          x: 112 * T, y: 16 * T, w: T, h: 12,
+          minX: 111 * T, maxX: 114 * T, speed: 250, dir: 1, slip: true,
+        }],
+        carts: [{ x: 140 * T, y: 16 * T, w: 3 * T, h: 12, minX: 134 * T, speed: 240 }],
       },
     ];
   }
@@ -537,6 +464,11 @@
           entities.push(makeDrop(x, y));
           continue;
         }
+        if (ch === "f") {
+          scan[y][x] = ".";
+          entities.push(makeFish(x, y));
+          continue;
+        }
         if ("ABNUP".includes(ch) === false && ch !== "O") continue;
         scan[y][x] = ".";
         if (ch === "A") { ax = x; ay = y; }
@@ -554,6 +486,28 @@
           x: mv.x, y: mv.y, w: mv.w, h: mv.h,
           minX: mv.minX, maxX: mv.maxX, speed: mv.speed, dir: mv.dir || 1,
           prevX: mv.x, dx: 0,
+          slip: !!mv.slip,
+        });
+      }
+    }
+    if (stage.shies) {
+      for (const s of stage.shies) {
+        entities.push({
+          kind: "shy",
+          x: s.x, y: s.y, w: s.w, h: s.h,
+          state: "home", dir: 1, wait: 0.7,
+          prevX: s.x, dx: 0,
+        });
+      }
+    }
+    if (stage.carts) {
+      for (const c of stage.carts) {
+        entities.push({
+          kind: "cart",
+          x: c.x, y: c.y, w: c.w, h: c.h || 12,
+          minX: c.minX, speed: c.speed || 150,
+          state: "idle", dir: -1,
+          prevX: c.x, dx: 0,
         });
       }
     }
@@ -578,6 +532,31 @@
       x: tx * TILE + (TILE - PW) / 2,
       y: feetRowFromMarker(ty) * TILE - PH,
     };
+  }
+
+  function makeFish(tx, ty) {
+    return {
+      kind: "fish",
+      tx, ty,
+      x: tx * TILE + 4,
+      y: (ty + 1) * TILE - 14,
+      w: 24,
+      h: 14,
+      state: "sit",
+    };
+  }
+
+  function eatFish(e) {
+    if (e.state !== "sit" || !player.grounded || !rects(player, e)) return;
+    e.state = "ate";
+    const ty = e.ty + 1;
+    for (let i = -1; i <= 2; i++) {
+      const tx = e.tx + i;
+      const ch = get(tx, ty);
+      if (ch === "#" || ch === "=" || ch === "F") setTile(tx, ty, ".");
+    }
+    sfx("fall");
+    cam.shake = Math.max(cam.shake, 8);
   }
 
   function makeDrop(tx, ty) {
@@ -815,11 +794,15 @@
         e.vy = 0;
         e.state = "wait";
         e.hot = true;
-      } else if (e.kind === "mover") {
+      } else if (e.kind === "mover" || e.kind === "shy" || e.kind === "cart") {
         e.x = e.homeX;
         e.prevX = e.homeX;
         e.dx = 0;
-        e.dir = 1;
+        e.dir = e.kind === "cart" ? -1 : 1;
+        e.state = e.kind === "cart" ? "idle" : (e.kind === "shy" ? "home" : e.state);
+        e.wait = 0.7;
+      } else if (e.kind === "fish") {
+        e.state = "sit";
       }
     }
     player = makePlayer(spawn.x, spawn.y);
@@ -929,7 +912,7 @@
         armed.set(`${tx},${ty}`, { t: delay, max: delay });
       }
       if (ch === "=" && !armed.has(`${tx},${ty}`)) collapseRun(tx, ty);
-      if (ch === "S") sprung = true;
+      if (ch === "S" || ch === "Q") sprung = true;
     }
     return sprung;
   }
@@ -971,10 +954,8 @@
     player.vy = Math.min(player.vy + grav * dt, 980);
     if (player.springLock > 0) player.springLock -= dt;
 
-    if (player.riding) {
-      player.x += player.riding.dx;
-      player.riding = null;
-    }
+    if (player.riding && !player.riding.slip) player.x += player.riding.dx;
+    player.riding = null;
 
     player.grounded = false;
     sweep(player, "x", player.vx * dt);
@@ -985,19 +966,29 @@
       player.vy = 0;
       player.grounded = true;
     }
-    if (hitY === "neg") player.vy = 0;
+    if (hitY === "neg") {
+      player.vy = 0;
+      if (player.rocket) kill("飛んでった");
+    }
 
     if (player.grounded) {
       const sprung = armUnderFeet();
       if (sprung && player.springLock <= 0) {
-        player.vy = SPRING_V;
+        let yeet = false;
+        const left = Math.floor(player.x / TILE);
+        const right = Math.floor((player.x + player.w - 0.01) / TILE);
+        const ty = Math.floor((player.y + player.h + 1) / TILE);
+        for (let tx = left; tx <= right; tx++) if (get(tx, ty) === "Q") yeet = true;
+        player.vy = yeet ? -1680 : SPRING_V;
+        player.vx = yeet ? 420 : player.vx;
         player.grounded = false;
         player.coyote = 0;
         player.springLock = 0.12;
         player.boost = true;
         player.justSprung = true;
+        player.rocket = yeet;
         player.air = 1;
-        sfx("spring");
+        sfx(yeet ? "warn" : "spring");
       }
     }
 
@@ -1011,13 +1002,16 @@
 
     if (Math.abs(player.vx) > 20 && player.grounded) player.runT += dt * 6;
     revealNear();
+    if (player.grounded) player.rocket = false;
+    if (player.y < -160) kill("飛んでった");
 
     if (player.y > H * TILE + 8) kill("底がない");
   }
 
   function stickPlatforms() {
     for (const p of entities) {
-      if (p.kind !== "mover") continue;
+      if (p.kind !== "mover" && p.kind !== "shy" && p.kind !== "cart") continue;
+      if (p.kind === "shy" && p.state === "flee") continue;
       const feet = player.y + player.h;
       const prevFeet = feet - (player._dy || 0);
       const overlapX = player.x + player.w > p.x + 4 && player.x < p.x + p.w - 4;
@@ -1102,6 +1096,44 @@
     e.x += e.dir * e.speed * dt;
     if (e.x <= e.minX) { e.x = e.minX; e.dir = 1; }
     if (e.x >= e.maxX) { e.x = e.maxX; e.dir = -1; }
+    e.dx = e.x - e.prevX;
+  }
+
+  function updateShy(e, dt) {
+    e.prevX = e.x;
+    if (e.state === "home") {
+      const near = player.x + player.w > e.x - 40 && player.x < e.x + e.w + 40;
+      const above = player.y + player.h < e.y + 10;
+      if (!player.grounded && near && above) {
+        e.state = "flee";
+        e.dir = (player.x + player.w / 2 < e.x + e.w / 2) ? 1 : -1;
+        e.wait = 0.85;
+        sfx("warn");
+      }
+    } else if (e.state === "flee") {
+      e.x += e.dir * 280 * dt;
+      e.wait -= dt;
+      if (e.wait <= 0) e.state = "back";
+    } else {
+      const dx = e.homeX - e.x;
+      e.x += Math.sign(dx) * Math.min(Math.abs(dx), 80 * dt);
+      if (Math.abs(e.x - e.homeX) < 1) { e.x = e.homeX; e.state = "home"; }
+    }
+    e.dx = e.x - e.prevX;
+  }
+
+  function updateCart(e, dt) {
+    e.prevX = e.x;
+    if (e.state === "idle") {
+      const feet = player.y + player.h;
+      const on = player.grounded && player.x + player.w > e.x + 2 && player.x < e.x + e.w - 2 && Math.abs(feet - e.y) < 10;
+      if (on) {
+        e.state = "go";
+        sfx("warn");
+      }
+    } else if (e.x > e.minX) {
+      e.x = Math.max(e.minX, e.x - e.speed * dt);
+    }
     e.dx = e.x - e.prevX;
   }
 
@@ -1193,7 +1225,8 @@
       else if (e.kind === "gull") updateGull(e, dt);
       else if (e.kind === "orca") updateOrca(e, dt);
       else if (e.kind === "drop") updateDrop(e, dt);
-      if (e.kind !== "mover" && e.hot !== false && e.state !== "delay" && e.state !== "gone" && player.alive && rects(player, e)) {
+      else if (e.kind === "fish") eatFish(e);
+      if (e.kind !== "mover" && e.kind !== "fish" && e.kind !== "shy" && e.kind !== "cart" && e.hot !== false && e.state !== "delay" && e.state !== "gone" && player.alive && rects(player, e)) {
         const name = { bear: "熊に会うた", penguin: "ペンギンや", gull: "鳥に突かれた", orca: "シャチや", drop: "氷が落ちてきた" }[e.kind];
         kill(name || "当てられた");
       }
@@ -1269,7 +1302,11 @@
       return;
     }
     updateArmed(dt);
-    for (const e of entities) if (e.kind === "mover") updateMover(e, dt);
+    for (const e of entities) {
+      if (e.kind === "mover") updateMover(e, dt);
+      else if (e.kind === "shy") updateShy(e, dt);
+      else if (e.kind === "cart") updateCart(e, dt);
+    }
     updatePlayer(dt);
     updateTraps(dt);
     updateDebris(dt);
@@ -1365,6 +1402,68 @@
     ctx.fillText("D", x + 22, y - 12);
   }
 
+  function drawFlower(x, y) {
+    const cx = x + TILE / 2;
+    ctx.strokeStyle = "#2f8a45";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, y + TILE - 2);
+    ctx.lineTo(cx, y + 10);
+    ctx.stroke();
+    ctx.fillStyle = "#ff8fb3";
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2 - 0.4;
+      ctx.beginPath();
+      ctx.arc(cx + Math.cos(a) * 7, y + 10 + Math.sin(a) * 7, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.fillStyle = "#ffe27a";
+    ctx.beginPath();
+    ctx.arc(cx, y + 10, 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawLantern(x, y) {
+    ctx.strokeStyle = "#5a3b22";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x + TILE / 2, y + 2);
+    ctx.lineTo(x + TILE / 2, y + 10);
+    ctx.stroke();
+    ctx.fillStyle = "#ffd15c";
+    ctx.strokeStyle = "#c47a22";
+    roundRect(x + 8, y + 10, 16, 16, 3);
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  function drawFish(e) {
+    ctx.fillStyle = "#ff8a4a";
+    roundRect(e.x, e.y + 3, e.w - 8, 9, 4);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(e.x + e.w - 10, e.y + 7);
+    ctx.lineTo(e.x + e.w, e.y + 2);
+    ctx.lineTo(e.x + e.w, e.y + 13);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(e.x + 6, e.y + 6, 3, 3);
+  }
+
+  function drawCart(e) {
+    ctx.fillStyle = "#8a5a32";
+    roundRect(e.x + 2, e.y, e.w - 4, 18, 3);
+    ctx.fill();
+    ctx.fillStyle = "#f3d29a";
+    ctx.fillRect(e.x + 6, e.y + 4, e.w - 12, 8);
+    ctx.fillStyle = "#1b3348";
+    ctx.beginPath();
+    ctx.arc(e.x + 12, e.y + 18, 5, 0, Math.PI * 2);
+    ctx.arc(e.x + e.w - 12, e.y + 18, 5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
   function drawSign(x, y, text) {
     const w = Math.max(TILE, text.length * 13 + 8);
     const left = x + TILE / 2 - w / 2;
@@ -1398,7 +1497,7 @@
           ctx.fillRect(x, y + 4 + Math.sin(performance.now() / 300 + tx) * 2, TILE, 3);
           continue;
         }
-        if (ch === "=" || ch === "#" || ch === "F" || ch === "C" || ch === "!" || ch === "S" || (ch === "I" && (revealed.has(`${tx},${ty}`) || DEBUG))) {
+        if (ch === "=" || ch === "#" || ch === "F" || ch === "C" || ch === "!" || ch === "S" || ch === "Q" || (ch === "I" && (revealed.has(`${tx},${ty}`) || DEBUG))) {
           const arm = armed.get(`${tx},${ty}`);
           const breaking = arm && (ch === "=" || ch === "F" || ch === "C");
           if (ch === "I" && !revealed.has(`${tx},${ty}`)) {
@@ -1418,15 +1517,21 @@
               const dy = arm ? Math.sin(performance.now() / 40) * 1.4 : 0;
               drawIce(x, y, TILE, TILE, dy);
             }
-            if (ch === "S") {
-              ctx.strokeStyle = "#d4534a";
-              ctx.lineWidth = 3;
+            if (ch === "S" || ch === "Q") {
+              ctx.strokeStyle = ch === "Q" ? "#ff5d8f" : "#d4534a";
+              ctx.lineWidth = ch === "Q" ? 4 : 3;
               ctx.beginPath();
-              ctx.moveTo(x + 8, y + 8);
-              ctx.lineTo(x + 24, y + 14);
-              ctx.lineTo(x + 8, y + 20);
-              ctx.lineTo(x + 24, y + 26);
+              ctx.moveTo(x + 6, y + 8);
+              ctx.lineTo(x + 26, y + 14);
+              ctx.lineTo(x + 6, y + 20);
+              ctx.lineTo(x + 26, y + 28);
               ctx.stroke();
+              if (ch === "Q") {
+                ctx.fillStyle = "#ff5d8f";
+                ctx.beginPath();
+                ctx.arc(x + 16, y + 8, 4, 0, Math.PI * 2);
+                ctx.fill();
+              }
             }
           }
         }
@@ -1454,6 +1559,11 @@
         if (ch === "Z") drawSign(x, y, "落ちるな");
         if (ch === "a") drawSign(x, y, "→");
         if (ch === "u") drawSign(x, y, "↑");
+        if (ch === "b") drawSign(x, y, "乗れ");
+        if (ch === "c") drawSign(x, y, "食べて");
+        if (ch === "d") drawSign(x, y, "ジャンプ");
+        if (ch === "p") drawFlower(x, y);
+        if (ch === "h") drawLantern(x, y);
         if (DEBUG && ch === "I" && !revealed.has(`${tx},${ty}`)) {
           ctx.globalAlpha = 0.45;
           drawIce(x, y, TILE, TILE, 0);
@@ -1463,11 +1573,18 @@
     }
     for (const d of debris) drawIce(d.x, d.y, d.w, d.h, 0);
     for (const e of entities) {
-      if (e.kind === "mover") {
+      if (e.kind === "mover" || e.kind === "shy") {
         drawIce(e.x, e.y, e.w, e.h, 0);
-        ctx.fillStyle = "#8fd0ea";
+        ctx.fillStyle = e.kind === "shy" ? "#ffd0e0" : "#8fd0ea";
         ctx.fillRect(e.x + 6, e.y + 4, e.w - 12, 3);
+        if (e.slip) {
+          ctx.fillStyle = "#ff8fb3";
+          ctx.beginPath();
+          ctx.arc(e.x + e.w / 2, e.y - 6, 5, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
+      if (e.kind === "cart") drawCart(e);
     }
   }
 
@@ -1591,8 +1708,9 @@
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, VW, VH);
     const g = ctx.createLinearGradient(0, 0, 0, VH);
-    g.addColorStop(0, "#8ecae6");
-    g.addColorStop(1, "#e7f6ef");
+    g.addColorStop(0, "#f6c6d6");
+    g.addColorStop(0.42, "#b9e3f6");
+    g.addColorStop(1, "#e8f7df");
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, VW, VH);
     for (const s of snow) {
@@ -1616,12 +1734,13 @@
     drawBackdrop();
     drawWorld();
     for (const e of entities) {
-      if (e.kind === "mover") continue;
+      if (e.kind === "mover" || e.kind === "shy" || e.kind === "cart") continue;
       if (e.kind === "bear") drawActor("bear", e, e.dir > 0);
       if (e.kind === "penguin") drawActor("penguin", e, e.dir > 0);
       if (e.kind === "gull") drawActor("gull", e, e.dir > 0);
       if (e.kind === "orca") drawActor("orca", e, e.flip);
       if (e.kind === "drop" && e.state !== "delay" && e.state !== "gone") drawIcicle(e);
+      if (e.kind === "fish" && e.state === "sit") drawFish(e);
       if (DEBUG) {
         ctx.strokeStyle = "#f33";
         ctx.strokeRect(e.x, e.y, e.w, e.h);
@@ -1668,7 +1787,7 @@
     ctx.fillText("ダイセーウチ ACT", VW / 2, 150);
     ctx.font = "700 22px Yu Gothic UI, Meiryo, sans-serif";
     ctx.fillStyle = "#204866";
-    ctx.fillText("足場も、旗も、ゴールも、信用するな", VW / 2, 196);
+    ctx.fillText("心があったかくなる氷や", VW / 2, 196);
     if (sprites.idle) {
       const ih = 180;
       const iw = ih * (sprites.idle.width / sprites.idle.height);
