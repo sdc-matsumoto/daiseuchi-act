@@ -13,7 +13,7 @@
   const PW = 22;
   const PH = 31;
   const SPRING_V = -860;
-  const SAVE_KEY = "daiseuchi-act-v4";
+  const SAVE_KEY = "daiseuchi-act-v5";
   const params = new URLSearchParams(location.search);
   const DEBUG = params.has("debug");
 
@@ -113,185 +113,104 @@
     const T = 32;
     return [
       {
-        name: "1面　おもてなし",
-        lie: "食べて、乗って、跳んだらええ",
-        rows: makeMap(112, 18, (m) => {
-          m.rect(0, 0, 1, 18, "#");
-          m.rect(111, 0, 1, 18, "#");
-          m.rect(0, 15, 112, 3, "#");
-          m.set(4, 14, "A");
-          m.set(8, 14, "p");
-          m.set(10, 14, "h");
-          pit(m, 14, 2, 15, 18);
-          m.set(20, 13, "R");
-          m.set(20, 14, "R");
-          m.set(24, 12, "c");
-          m.set(28, 14, "f");
-          m.rect(27, 16, 4, 2, "^");
-          m.set(36, 13, "R");
-          m.set(36, 14, "R");
-          m.set(42, 12, "b");
-          pit(m, 48, 12, 15, 18);
-          m.set(64, 13, "R");
-          m.set(64, 14, "R");
-          m.set(70, 12, "d");
-          pit(m, 76, 3, 15, 18);
-          m.set(76, 15, "Q");
-          m.set(86, 13, "R");
-          m.set(86, 14, "R");
-          m.set(96, 13, "R");
-          m.set(96, 14, "R");
-          m.set(100, 14, "p");
-          m.set(102, 14, "h");
-          for (let y = 10; y <= 14; y++) m.set(106, y, "G");
+        name: "一枚の氷",
+        lie: "右へ行けば、あたたかい",
+        rows: makeMap(196, 48, (m) => {
+          m.rect(0, 0, 1, 48, "#");
+          m.rect(195, 0, 1, 48, "#");
+          m.rect(0, 47, 196, 1, "#");
+
+          m.rect(1, 40, 24, 7, "#");
+          m.set(5, 39, "A");
+          m.set(8, 39, "p");
+          m.set(11, 39, "h");
+          m.set(14, 37, "c");
+          m.set(17, 39, "f");
+          m.rect(17, 41, 2, 2, "^");
+
+          m.set(22, 37, "Y");
+          m.rect(26, 41, 14, 6, "^");
+          m.rect(30, 40, 4, 1, "#");
+          m.set(31, 39, "N");
+
+          m.rect(18, 37, 8, 1, "#");
+          m.rect(24, 34, 12, 1, "#");
+          m.rect(30, 31, 52, 1, "#");
+          m.rect(42, 28, 12, 1, "v");
+          m.rect(64, 31, 2, 1, ".");
+          m.rect(32, 35, 44, 1, "^");
+          m.rect(50, 35, 3, 1, ".");
+          m.rect(40, 33, 6, 1, "v");
+          m.set(46, 29, "b");
+
+          m.rect(76, 34, 14, 1, "#");
+          m.rect(84, 37, 16, 1, "#");
+          m.set(86, 36, "p");
+          m.set(89, 36, "h");
+          m.rect(90, 40, 18, 7, "#");
+
+          m.rect(108, 40, 14, 7, ".");
+          m.rect(108, 42, 14, 5, "~");
+          m.rect(108, 41, 14, 1, "^");
+          m.rect(122, 40, 10, 7, "#");
+          m.rect(132, 40, 2, 7, ".");
+          m.rect(132, 42, 2, 5, "~");
+          m.rect(132, 41, 2, 1, "^");
+          m.rect(134, 40, 28, 7, "#");
+          m.set(126, 39, "p");
+          m.set(128, 37, "b");
+          m.set(138, 39, "f");
+          m.rect(138, 41, 2, 2, "^");
+          m.set(144, 39, "h");
+
+          m.rect(154, 37, 18, 1, "#");
+          m.rect(146, 34, 24, 1, "#");
+          m.rect(154, 31, 18, 1, "#");
+          m.rect(146, 28, 24, 1, "#");
+          m.rect(154, 25, 20, 1, "#");
+          m.set(158, 36, "p");
+          m.set(150, 33, "h");
+          m.set(166, 24, "p");
+
+          m.rect(182, 29, 10, 1, "#");
+          m.rect(182, 30, 10, 8, "~");
+          for (let y = 24; y <= 28; y++) m.set(188, y, "g");
+
+          m.rect(58, 22, 103, 1, "#");
+          m.rect(70, 19, 12, 1, "v");
+          m.set(78, 21, "p");
+          m.set(82, 21, "h");
+          m.set(150, 20, "Y");
+
+          m.rect(48, 26, 64, 1, "#");
+          m.set(56, 25, "p");
+          m.set(96, 25, "h");
+
+          m.rect(96, 30, 44, 1, "#");
+          m.rect(124, 30, 3, 1, ".");
+          m.set(124, 30, "Q");
+          m.rect(125, 31, 2, 3, "^");
+          m.set(116, 29, "d");
+          m.set(120, 29, "p");
+          m.set(140, 29, "h");
+          for (let y = 24; y <= 29; y++) m.set(136, y, "G");
         }),
-        movers: [{
-          x: 45 * T, y: 15 * T, w: 3 * T, h: 12,
-          minX: 45 * T, maxX: 58 * T, speed: 68, dir: 1,
-        }],
-      },
-      {
-        name: "2面　優しそうな床",
-        lie: "下の床が近道や",
-        rows: makeMap(128, 20, (m) => {
-          m.rect(0, 0, 1, 20, "#");
-          m.rect(127, 0, 1, 20, "#");
-          m.rect(0, 16, 128, 4, "#");
-          m.set(4, 15, "A");
-          m.set(8, 15, "p");
-          m.set(11, 15, "h");
-          m.set(16, 14, "R");
-          m.set(16, 15, "R");
-          m.set(22, 13, "b");
-          m.rect(24, 15, 2, 1, "#");
-          m.rect(26, 14, 2, 1, "#");
-          m.rect(28, 13, 24, 1, "#");
-          pit(m, 32, 10, 16, 20);
-          m.set(56, 14, "R");
-          m.set(56, 15, "R");
-          m.set(58, 13, "b");
-          m.rect(58, 15, 2, 1, "#");
-          m.rect(60, 14, 2, 1, "#");
-          m.rect(62, 13, 8, 1, "#");
-          m.rect(72, 13, 4, 1, "#");
-          m.rect(78, 13, 4, 1, "#");
-          m.rect(84, 13, 10, 1, "#");
-          pit(m, 66, 22, 16, 20);
-          m.rect(66, 17, 22, 3, "~");
-          m.rect(66, 14, 3, 1, "v");
-          m.set(96, 14, "R");
-          m.set(96, 15, "R");
-          m.set(100, 15, "p");
-          m.set(104, 8, "U");
-          m.set(110, 14, "R");
-          m.set(110, 15, "R");
-          m.set(114, 15, "h");
-          for (let y = 11; y <= 15; y++) m.set(120, y, "G");
-        }),
-        shies: [{ x: 34 * T, y: 16 * T, w: 3 * T, h: 12 }],
-        carts: [{ x: 80 * T, y: 16 * T, w: 3 * T, h: 12, minX: 66 * T, speed: 240 }],
-      },
-      {
-        name: "3面　海のごちそう",
-        lie: "海は泳げるし、旗は本物や",
-        rows: makeMap(124, 18, (m) => {
-          m.rect(0, 0, 1, 18, "#");
-          m.rect(123, 0, 1, 18, "#");
-          m.rect(0, 14, 124, 4, "#");
-          m.set(4, 13, "A");
-          m.set(8, 13, "p");
-          m.set(10, 13, "h");
-          m.set(16, 12, "R");
-          m.set(16, 13, "R");
-          m.rect(22, 14, 21, 4, ".");
-          m.rect(22, 15, 21, 3, "~");
-          m.rect(36, 14, 4, 1, "#");
-          m.set(37, 12, "R");
-          m.set(37, 13, "R");
-          m.set(48, 12, "R");
-          m.set(48, 13, "R");
-          m.set(52, 11, "c");
-          m.set(56, 13, "f");
-          m.rect(55, 15, 4, 3, "^");
-          m.set(66, 12, "R");
-          m.set(66, 13, "R");
-          m.set(70, 11, "Y");
-          m.rect(76, 14, 3, 4, ".");
-          m.rect(76, 17, 3, 1, "~");
-          for (let y = 14; y <= 16; y++) m.set(77, y, "g");
-          m.set(86, 13, "p");
-          m.set(90, 7, "U");
-          m.set(98, 12, "R");
-          m.set(98, 13, "R");
-          m.set(102, 13, "h");
-          for (let y = 9; y <= 13; y++) m.set(112, y, "G");
-        }),
+        shies: [
+          { x: 64 * T, y: 31 * T, w: 2 * T, h: 12 },
+        ],
+        carts: [
+          { x: 50 * T, y: 35 * T, w: 3 * T, h: 12, minX: 40 * T, speed: 220 },
+        ],
         movers: [
           {
-            x: 19 * T, y: 14 * T, w: 3 * T, h: 12,
-            minX: 19 * T, maxX: 34 * T, speed: 76, dir: 1,
+            x: 100 * T, y: 40 * T, w: 3 * T, h: 12,
+            minX: 100 * T, maxX: 120 * T, speed: 68, dir: 1,
           },
           {
-            x: 40 * T, y: 14 * T, w: T, h: 12,
-            minX: 39 * T, maxX: 42 * T, speed: 250, dir: 1, slip: true,
+            x: 132 * T, y: 40 * T, w: T, h: 12,
+            minX: 131 * T, maxX: 135 * T, speed: 250, dir: 1, slip: true,
           },
         ],
-      },
-      {
-        name: "4面　おみやげ",
-        lie: "ぜんぶ親切に置いてある",
-        rows: makeMap(156, 20, (m) => {
-          m.rect(0, 0, 1, 20, "#");
-          m.rect(155, 0, 1, 20, "#");
-          m.rect(0, 16, 156, 4, "#");
-          m.set(4, 15, "A");
-          m.set(8, 15, "p");
-          m.set(11, 15, "h");
-          m.set(16, 14, "R");
-          m.set(16, 15, "R");
-          m.set(22, 13, "c");
-          m.set(28, 15, "f");
-          m.rect(27, 17, 4, 3, "^");
-          m.set(38, 14, "R");
-          m.set(38, 15, "R");
-          m.set(44, 13, "d");
-          pit(m, 50, 3, 16, 20);
-          m.set(50, 16, "Q");
-          m.set(60, 14, "R");
-          m.set(60, 15, "R");
-          m.set(70, 14, "R");
-          m.set(70, 15, "R");
-          m.set(76, 13, "b");
-          m.rect(78, 15, 2, 1, "#");
-          m.rect(80, 14, 2, 1, "#");
-          m.rect(82, 13, 16, 1, "#");
-          pit(m, 86, 8, 16, 20);
-          m.set(102, 14, "R");
-          m.set(102, 15, "R");
-          m.set(108, 13, "b");
-          m.rect(112, 16, 3, 4, ".");
-          m.rect(112, 17, 3, 3, "~");
-          m.set(120, 14, "R");
-          m.set(120, 15, "R");
-          m.set(122, 13, "b");
-          m.rect(122, 15, 2, 1, "#");
-          m.rect(124, 14, 2, 1, "#");
-          m.rect(126, 13, 22, 1, "#");
-          pit(m, 134, 12, 16, 20);
-          m.rect(134, 17, 12, 3, "~");
-          m.rect(134, 14, 3, 1, "v");
-          m.set(148, 14, "R");
-          m.set(148, 15, "R");
-          m.set(150, 15, "p");
-          m.set(152, 15, "h");
-          for (let y = 11; y <= 15; y++) m.set(154, y, "G");
-        }),
-        shies: [{ x: 88 * T, y: 16 * T, w: 3 * T, h: 12 }],
-        movers: [{
-          x: 112 * T, y: 16 * T, w: T, h: 12,
-          minX: 111 * T, maxX: 114 * T, speed: 250, dir: 1, slip: true,
-        }],
-        carts: [{ x: 140 * T, y: 16 * T, w: 3 * T, h: 12, minX: 134 * T, speed: 240 }],
       },
     ];
   }
@@ -2003,7 +1922,7 @@
       mode = "play";
       ok(`stage${i} spawn free`, !hitsSolid(player));
       ok(`stage${i} has goal`, baseGrid.some((r) => r.includes("G")));
-      ok(`stage${i} has cp`, baseGrid.some((r) => r.includes("R")));
+      ok(`stage${i} no mid flag`, !baseGrid.some((r) => r.includes("R")));
       for (let f = 0; f < 40; f++) update(1 / 60);
       ok(`stage${i} still alive`, player.alive && mode === "play");
       ok(`stage${i} supported`, player.grounded);
